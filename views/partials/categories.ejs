@@ -2,7 +2,7 @@
     <div class="categories-scroll">
         <% const cats = ['All','Gaming','Electronics','Robux','Clothes','Accessories','Adapters','Home','Garden']; %>
         <% cats.forEach(cat => { %>
-        <a href="/?category=<%= cat %>" class="category-item <%= current_category === cat ? 'active' : '' %>"><%= cat %></a>
+        <a href="/?category=<%= cat %>" class="category-item <%= (locals.current_category || 'All') === cat ? 'active' : '' %>"><%= cat %></a>
         <% }); %>
     </div>
 </div>
