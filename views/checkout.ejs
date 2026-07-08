@@ -6,26 +6,57 @@
     <title>Checkout — <%= product.name %></title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .checkout-page { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; }
+        .checkout-progress { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 2.5rem; padding: 1.5rem 2rem; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.55); border-radius: 60px; }
+        .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; color: #bbb; text-transform: uppercase; letter-spacing: 0.05em; }
+        .progress-step.active { color: #e91e63; }
+        .progress-step.done { color: #2e7d32; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+        .progress-step.active .step-circle { background: linear-gradient(135deg, #e91e63, #c2185b); box-shadow: 0 4px 12px rgba(233,30,99,0.3); }
+        .progress-step.done .step-circle { background: #2e7d32; }
+        .progress-line { width: 60px; height: 3px; background: #e0e0e0; margin: 0 1rem 1.5rem; border-radius: 3px; }
+        .progress-line.done { background: #2e7d32; }
+        
+        .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        
+        .checkout-form-wrapper { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.55); border-radius: 24px; padding: 2.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
+        .checkout-form-wrapper h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.2rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 0.3rem; }
+        .input-group input { width: 100%; padding: 1rem 1.2rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: rgba(255,255,255,0.8); }
+        .input-group input:focus { border-color: #e91e63; }
+        .form-section { margin-bottom: 2rem; }
+        
+        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); transition: all 0.3s; margin-top: 1rem; }
+        .btn-paypal:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,196,57,0.5); }
+        
+        .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.04); }
+        .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+        .summary-product { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
+        .summary-img { width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(155deg, #fce4ec, #f8bbd0); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .summary-img img { width: 70%; height: 70%; object-fit: contain; }
+        .summary-details strong { font-size: 0.85rem; }
+        .summary-details p { font-size: 0.72rem; color: #999; margin-top: 0.2rem; }
+        .summary-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 0.8rem 0; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; padding: 0.3rem 0; }
+        .summary-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; padding-top: 0.5rem; }
+        .free { color: #2e7d32; font-weight: 700; }
+        
+        @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
     
     <div class="checkout-page">
         <div class="checkout-progress">
-            <div class="progress-step done">
-                <div class="step-circle">✓</div>
-                <span>Shipping</span>
-            </div>
+            <div class="progress-step done"><div class="step-circle">✓</div><span>Shipping</span></div>
             <div class="progress-line done"></div>
-            <div class="progress-step active">
-                <div class="step-circle">2</div>
-                <span>Payment</span>
-            </div>
+            <div class="progress-step active"><div class="step-circle">2</div><span>Payment</span></div>
             <div class="progress-line"></div>
-            <div class="progress-step">
-                <div class="step-circle">3</div>
-                <span>Confirmation</span>
-            </div>
+            <div class="progress-step"><div class="step-circle">3</div><span>Confirmation</span></div>
         </div>
 
         <div class="checkout-grid">
@@ -46,7 +77,7 @@
 
                     <div class="form-section">
                         <h3>Payment</h3>
-                        <p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.9rem;">You will be redirected to PayPal to complete your payment securely.</p>
+                        <p style="color:#999;margin-bottom:1rem;font-size:0.9rem;">You will be redirected to PayPal to complete your payment securely.</p>
                         <button type="submit" class="btn-paypal">
                             <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal">
                             Pay with PayPal
@@ -72,18 +103,5 @@
         </div>
     </div>
     <%- include('partials/footer') %>
-    <style>
-    .btn-paypal{width:100%;display:flex;align-items:center;justify-content:center;gap:0.6rem;background:linear-gradient(135deg,#FFC439,#FFB347);color:#003087;padding:1.1rem;border-radius:50px;font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(255,196,57,0.3);transition:all 0.3s}
-    .btn-paypal:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,196,57,0.5)}
-    .checkout-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.5rem;padding:1.5rem 2rem;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:60px}
-    .progress-step{display:flex;flex-direction:column;align-items:center;gap:0.5rem;font-size:0.75rem;font-weight:600;color:#bbb;text-transform:uppercase;letter-spacing:0.05em}
-    .progress-step.active{color:var(--pink)}
-    .progress-step.done{color:#2e7d32}
-    .step-circle{width:36px;height:36px;border-radius:50%;background:#e0e0e0;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem}
-    .progress-step.active .step-circle{background:linear-gradient(135deg,var(--pink),var(--pink-dark));box-shadow:0 4px 12px rgba(233,30,99,0.3)}
-    .progress-step.done .step-circle{background:#2e7d32}
-    .progress-line{width:60px;height:3px;background:#e0e0e0;margin:0 1rem 1.5rem;border-radius:3px}
-    .progress-line.done{background:#2e7d32}
-    </style>
 </body>
 </html>
