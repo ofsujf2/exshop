@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Shop — Premium Products</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="petals-container">
+        <% for (let i = 0; i < 12; i++) { %><div class="petal"></div><% } %>
+    </div>
+    <%- include('partials/navbar') %>
+    <%- include('partials/categories') %>
+
+    <section class="hero">
+        <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Trusted by 10,000+ customers worldwide
+        </div>
+        <h1>Premium<br><span class="accent">Products</span> Delivered</h1>
+        <p class="subtitle">Discover our curated collection of high-end products. Quality guaranteed.</p>
+        <div class="hero-cta">
+            <a href="#products" class="btn-primary btn-lg">Shop Now →</a>
+            <span class="hero-note">✓ Free worldwide shipping</span>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item"><span class="stat-number">10K+</span><span class="stat-label">Customers</span></div>
+            <div class="stat-item"><span class="stat-number">4.9</span><span class="stat-label">★ Rating</span></div>
+            <div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">Countries</span></div>
+            <div class="stat-item"><span class="stat-number">24/7</span><span class="stat-label">Support</span></div>
+        </div>
+    </section>
+
+    <% if (top_products && top_products.length > 0) { %>
+    <section class="featured-section">
+        <div class="section-header"><h2>Best <span class="accent">Sellers</span></h2></div>
+        <div class="featured-grid">
+            <% top_products.forEach((p, i) => { %>
+            <div class="featured-card">
+                <span class="featured-rank">#<%= i+1 %></span>
+                <div class="featured-image">
+                    <% if (p.image) { %><img src="/uploads/<%= p.image %>" alt="<%= p.name %>"><% } %>
+                </div>
+                <div class="featured-info">
+                    <h4><%= p.name.substring(0,25) %></h4>
+                    <div class="featured-price">€<%= p.price.toFixed(2) %></div>
+                    <div class="featured-sold"><%= p.sales_count %>+ sold</div>
+                    <a href="/product/<%= p.id %>" class="btn-primary btn-sm">View</a>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </section>
+    <% } %>
+
+    <section id="products" class="products-section">
+        <div class="section-header"><h2>Our <span class="accent">Collection</span></h2></div>
+        <div class="products-grid">
+            <% if (products && products.length > 0) { %>
+            <% products.forEach(p => { %>
+            <div class="product-card">
+                <div class="image-wrapper">
+                    <% if (p.image) { %><img src="/uploads/<%= p.image %>" alt="<%= p.name %>"><% } %>
+                    <div class="card-badge"><%= p.category %></div>
+                </div>
+                <div class="card-body">
+                    <h3><%= p.name %></h3>
+                    <p class="desc"><%= p.description.substring(0,100) %>...</p>
+                    <div class="card-footer">
+                        <div class="price">€<%= p.price.toFixed(2) %></div>
+                        <div class="mini-rating">★★★★★ <span>4.9</span></div>
+                    </div>
+                    <div class="sold-count"><%= p.sales_count %>+ sold</div>
+                    <a href="/product/<%= p.id %>" class="btn-primary">View Details →</a>
+                </div>
+            </div>
+            <% }); %>
+            <% } else { %>
+            <div class="empty-state"><h3>Coming Soon</h3><p>No products in this category yet.</p></div>
+            <% } %>
+        </div>
+    </section>
+
+    <section class="reviews-section">
+        <div class="section-header"><h2>What Our <span class="accent">Customers</span> Say</h2></div>
+        <div class="reviews-grid">
+            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">S</div><div><div class="reviewer-name">Sarah Mitchell</div><div class="reviewer-email">sarah.m@icloud.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"Ordered the vacuum cleaner and it arrived in 3 days! Best purchase I've made all year!"</p><div class="review-date">2 days ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
+            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">J</div><div><div class="reviewer-name">James Cooper</div><div class="reviewer-email">j.cooper@outlook.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"Premium quality towels! Super soft, wash perfectly. Shipping was fast to the UK!"</p><div class="review-date">5 days ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
+            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">E</div><div><div class="reviewer-name">Emily Rodriguez</div><div class="reviewer-email">emily.r@gmail.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"The adapter works perfectly! Charges super fast. Way better than the original!"</p><div class="review-date">1 week ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
+            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">M</div><div><div class="reviewer-name">Michael Chen</div><div class="reviewer-email">m.chen@proton.me</div></div><div class="review-stars">★★★★☆</div></div><p class="review-text">"Great gaming accessories! RGB mouse is smooth. Amazing deal!"</p><div class="review-date">2 weeks ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
+        </div>
+    </section>
+
+    <section class="trust-bar">
+        <div class="trust-item">🔒 Secure Payments</div>
+        <div class="trust-item">🚀 Fast Shipping</div>
+        <div class="trust-item">↩️ 30-Day Returns</div>
+        <div class="trust-item">💬 24/7 Support</div>
+        <div class="trust-item">✅ Quality Guarantee</div>
+    </section>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages — Executive Shop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div style="display:flex;align-items:center;justify-content:center;min-height:70vh;text-align:center;">
+        <div>
+            <div id="clock" style="font-size:5rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#c2185b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></div>
+            <p style="font-size:1.5rem;color:#999;">Soon...</p>
+        </div>
+    </div>
+    <script>
+        setInterval(() => {
+            const d = new Date();
+            document.getElementById('clock').textContent = 
+                String(d.getHours()).padStart(2,'0') + ':' + 
+                String(d.getMinutes()).padStart(2,'0') + ':' + 
+                String(d.getSeconds()).padStart(2,'0');
+        }, 1000);
+    </script>
+    <%- include('partials/footer') %>
+</body>
+</html>

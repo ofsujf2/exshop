@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — Executive Shop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="admin-container">
+        <h1>Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon" style="background:#e91e63;">📦</div><div><span class="stat-value"><%= products.length %></span><span class="stat-label">Products</span></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#2e7d32;">🛒</div><div><span class="stat-value"><%= orders.length %></span><span class="stat-label">Orders</span></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#f59e0b;">💰</div><div><span class="stat-value">€<%= orders.reduce((sum,o) => sum + o.amount, 0).toFixed(2) %></span><span class="stat-label">Revenue</span></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#1565c0;">⏳</div><div><span class="stat-value"><%= orders.filter(o => o.status === 'pending').length %></span><span class="stat-label">Pending</span></div></div>
+        </div>
+
+        <div class="section-title">Add Product</div>
+        <form method="POST" action="/admin/add" enctype="multipart/form-data">
+            <div class="form-group"><label>Name</label><input type="text" name="name" required></div>
+            <div class="form-group"><label>Description</label><textarea name="description" required></textarea></div>
+            <div class="form-group"><label>Price (€)</label><input type="number" step="0.01" name="price" required></div>
+            <div class="form-group"><label>Category</label><select name="category"><option>All</option><option>Gaming</option><option>Electronics</option><option>Robux</option><option>Clothes</option><option>Accessories</option><option>Adapters</option><option>Home</option><option>Garden</option></select></div>
+            <div class="form-group"><label>Image</label><input type="file" name="image"></div>
+            <button type="submit" class="btn-submit">Publish</button>
+        </form>
+
+        <div class="section-title">Catalog (<%= products.length %>)</div>
+        <% products.forEach(p => { %>
+        <div class="admin-item">
+            <span><strong><%= p.name %></strong> — €<%= p.price.toFixed(2) %> [<%= p.category %>] <%= p.sales_count %>+ sold</span>
+            <a href="/admin/delete/<%= p.id %>" class="btn-delete">Remove</a>
+        </div>
+        <% }); %>
+
+        <a href="/admin/logout" class="btn-logout">Sign Out</a>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

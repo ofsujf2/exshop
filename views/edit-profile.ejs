@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile — Executive Shop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="auth-page">
+        <div class="auth-card">
+            <h1>Edit Profile</h1>
+            <form method="POST" action="/profile/edit" enctype="multipart/form-data">
+                <div class="input-group"><label>Full Name</label><input type="text" name="full_name" value="<%= user.full_name || '' %>"></div>
+                <div class="input-group"><label>Bio</label><textarea name="bio"><%= user.bio || '' %></textarea></div>
+                <div class="input-group"><label>Profile Picture</label><input type="file" name="profile_pic"></div>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

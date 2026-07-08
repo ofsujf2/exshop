@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.username %> — Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="profile-page">
+        <div class="profile-card">
+            <div class="profile-cover"></div>
+            <div class="profile-body">
+                <div class="profile-avatar">
+                    <% if (user.profile_pic) { %><img src="/uploads/<%= user.profile_pic %>" alt="<%= user.username %>"><% } else { %><div class="avatar-placeholder"><%= user.username[0].toUpperCase() %></div><% } %>
+                </div>
+                <h1><%= user.full_name || user.username %></h1>
+                <p>@<%= user.username %></p>
+                <p><%= user.bio || 'No bio yet.' %></p>
+                <p>Joined <%= user.created_at %></p>
+                <a href="/profile/edit" class="btn-primary">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>
