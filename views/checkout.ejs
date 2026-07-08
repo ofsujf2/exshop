@@ -16,70 +16,40 @@
             <div class="progress-line active"></div>
             <div class="progress-step active"><div class="step-circle">2</div><span>Payment</span></div>
             <div class="progress-line"></div>
-            <div class="progress-step"><div class="step-circle">3</div><span>Confirmation</span></div>
+            <div class="progress-step"><div class="step-circle">3</div><span>Done</span></div>
         </div>
 
         <div class="checkout-grid">
             <div class="checkout-form-wrapper">
-                <form method="POST" action="/checkout/<%= product.id %>" id="checkout-form">
+                <form method="POST" action="/checkout/<%= product.id %>">
                     <div class="form-section">
                         <div class="section-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         </div>
-                        <h3>Shipping Information</h3>
+                        <h3>Shipping Details</h3>
                         <div class="form-row">
-                            <div class="input-group"><label>Full Name</label><input type="text" name="name" required></div>
-                            <div class="input-group"><label>Email</label><input type="email" name="email" required></div>
+                            <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
+                            <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
                         </div>
+                        <div class="input-group"><label>Address</label><input type="text" name="address" placeholder="123 Main Street" required></div>
                         <div class="form-row">
-                            <div class="input-group"><label>Phone</label><input type="tel" name="phone"></div>
-                            <div class="input-group"><label>Quantity</label><input type="number" value="1" min="1" max="10"></div>
+                            <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
+                            <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
                         </div>
-                        <div class="input-group"><label>Address</label><input type="text" name="address" required></div>
-                        <div class="form-row">
-                            <div class="input-group"><label>City</label><input type="text" name="city" required></div>
-                            <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" required></div>
-                        </div>
-                        <div class="input-group"><label>Country</label><select name="country"><option>Italy</option><option>USA</option><option>UK</option><option>Germany</option><option>France</option><option>Spain</option></select></div>
                     </div>
 
                     <div class="form-section">
                         <div class="section-icon">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         </div>
-                        <h3>Payment Method</h3>
+                        <h3>Payment</h3>
+                        <p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.9rem;">You will be redirected to PayPal to complete your payment securely.</p>
                         
-                        <% if (config && config.paypal_verified) { %>
-                        <div class="paypal-checkout-box">
-                            <img src="https://img.icons8.com/color/96/paypal.png" height="32" alt="PayPal">
-                            <div>
-                                <strong>PayPal Checkout</strong>
-                                <span>Secure payment with PayPal</span>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-paypal-checkout">
-                            <img src="https://img.icons8.com/color/48/paypal.png" height="20" alt="">
+                        <button type="submit" class="btn-paypal">
+                            <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal">
                             Pay with PayPal
                         </button>
-                        <% } else { %>
-                        <div class="paypal-checkout-box">
-                            <img src="https://img.icons8.com/color/96/paypal.png" height="32" alt="PayPal">
-                            <div>
-                                <strong>PayPal Checkout</strong>
-                                <span>Complete your order - no account needed</span>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-paypal-checkout">
-                            <img src="https://img.icons8.com/color/48/paypal.png" height="20" alt="">
-                            Complete Order
-                        </button>
-                        <% } %>
                     </div>
-
-                    <p class="secure-note">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        Your data is encrypted and secure
-                    </p>
                 </form>
             </div>
 
@@ -93,20 +63,13 @@
                         <div class="summary-details">
                             <strong><%= product.name %></strong>
                             <p><%= product.description.substring(0,60) %>...</p>
-                            <span class="summary-category"><%= product.category %></span>
                         </div>
                     </div>
                     <div class="summary-divider"></div>
                     <div class="summary-row"><span>Subtotal</span><span>€<%= product.price.toFixed(2) %></span></div>
                     <div class="summary-row"><span>Shipping</span><span class="free">FREE</span></div>
-                    <div class="summary-row"><span>Tax</span><span>Included</span></div>
                     <div class="summary-divider"></div>
                     <div class="summary-total"><span>Total</span><span>€<%= product.price.toFixed(2) %></span></div>
-                    <div class="summary-badges">
-                        <div class="badge">✓ Money-back guarantee</div>
-                        <div class="badge">✓ Secure checkout</div>
-                        <div class="badge">✓ Fast shipping</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -114,19 +77,7 @@
     <%- include('partials/footer') %>
 
     <style>
-    .paypal-checkout-box {
-        background: linear-gradient(135deg, #0070BA, #003087);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    .paypal-checkout-box strong { display: block; font-size: 1rem; }
-    .paypal-checkout-box span { font-size: 0.8rem; opacity: 0.9; }
-    .btn-paypal-checkout {
+    .btn-paypal {
         width: 100%;
         display: flex;
         align-items: center;
@@ -143,7 +94,7 @@
         box-shadow: 0 4px 16px rgba(255,196,57,0.3);
         transition: all 0.3s;
     }
-    .btn-paypal-checkout:hover {
+    .btn-paypal:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(255,196,57,0.5);
     }
