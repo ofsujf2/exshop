@@ -21,6 +21,7 @@ const CRYPTO_WALLETS = {
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use('/uploads', express.static('public/uploads'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({ secret: 'shop-' + Math.random(), resave: false, saveUninitialized: false }));
@@ -31,7 +32,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-['public/uploads', 'public/css'].forEach(d => {
+['public/uploads', 'public/css', 'public/uploads'].forEach(d => {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
 });
 
@@ -72,30 +73,14 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/product/:id', (req, res) => {
-    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, product) => {
-        if (!product) return res.redirect('/');
-        db.get("SELECT * FROM payment_config LIMIT 1", (err, config) => {
-            res.render('product', { product, user: req.session.userId, config });
-        });
+
     });
 });
 
-app.get('/checkout/:id', (req, res) => {
-    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, product) => {
-        if (!product) return res.redirect('/');
-        res.render('checkout', { product, user: req.session.userId, wallets: CRYPTO_WALLETS });
-    });
+
 });
 
-app.post('/checkout/:id', (req, res) => {
-    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, product) => {
-        if (!product) return res.redirect('/');
-        db.run("INSERT INTO orders (product_id, payment_method, amount, customer_name, customer_email, created_at) VALUES (?,?,?,?,?,datetime('now'))",
-            [product.id, req.body.payment_method || 'paypal', product.price, req.body.name || 'N/A', req.body.email || 'N/A']);
-        db.run("UPDATE products SET sales_count = sales_count + 1 WHERE id = ?", [product.id]);
-        res.redirect('/success');
-    });
+
 });
 
 app.get('/success', (req, res) => res.render('success'));
@@ -111,6 +96,31 @@ app.post('/register', (req, res) => {
             res.redirect('/');
         });
 });
+
+app.get('/product/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        res.render('product', { product: p, user: req.session.userId, config: null });
+    });
+});
+
+app.get('/checkout/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        res.render('checkout', { product: p, user: req.session.userId, wallets: {} });
+    });
+});
+
+app.post('/checkout/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        db.run("INSERT INTO orders (product_id, amount, customer_name, customer_email, created_at) VALUES (?,?,?,?,datetime('now'))",
+            [p.id, p.price, req.body.name || '', req.body.email || '']);
+        db.run("UPDATE products SET sales_count = sales_count + 1 WHERE id = ?", [p.id]);
+        res.redirect('/success');
+    });
+});
+
 app.get('/login', (req, res) => res.render('login', { user: req.session.userId }));
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
