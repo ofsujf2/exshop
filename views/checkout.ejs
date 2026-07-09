@@ -16,7 +16,8 @@
         .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
         .input-group input { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
         .input-group input:focus { border-color: #e91e63; }
-        .btn-crypto { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; margin-top: 1rem; text-decoration: none; }
+        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 1rem; }
+        .btn-crypto { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; text-decoration: none; }
         .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 20px; padding: 1.5rem; }
         .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
         .summary-product { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
@@ -37,7 +38,7 @@
         <div class="checkout-grid">
             <div class="checkout-form-wrapper">
                 <h3>Shipping Details</h3>
-                <form id="checkout-form" method="GET" action="/crypto-checkout/<%= product.id %>">
+                <form id="paypal-form" method="GET" action="/paypal-checkout/<%= product.id %>">
                     <div class="form-row">
                         <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
                         <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
@@ -47,8 +48,19 @@
                         <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
                         <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
                     </div>
-                    <button type="submit" class="btn-crypto">
-                        <span style="font-size:1.4rem;">₿</span> Pay with Crypto →
+                    <button type="submit" class="btn-paypal">
+                        <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal"> Pay with PayPal
+                    </button>
+                </form>
+
+                <form method="GET" action="/crypto-checkout/<%= product.id %>">
+                    <input type="hidden" name="name" id="crypto-name">
+                    <input type="hidden" name="email" id="crypto-email">
+                    <input type="hidden" name="address" id="crypto-address">
+                    <input type="hidden" name="city" id="crypto-city">
+                    <input type="hidden" name="zip_code" id="crypto-zip">
+                    <button type="submit" class="btn-crypto" onclick="copyShippingToCrypto()">
+                        <span style="font-size:1.4rem;">₿</span> Pay with Crypto
                     </button>
                 </form>
             </div>
@@ -69,5 +81,14 @@
         </div>
     </div>
     <%- include('partials/footer') %>
+    <script>
+    function copyShippingToCrypto() {
+        document.getElementById('crypto-name').value = document.querySelector('#paypal-form input[name="name"]').value;
+        document.getElementById('crypto-email').value = document.querySelector('#paypal-form input[name="email"]').value;
+        document.getElementById('crypto-address').value = document.querySelector('#paypal-form input[name="address"]').value;
+        document.getElementById('crypto-city').value = document.querySelector('#paypal-form input[name="city"]').value;
+        document.getElementById('crypto-zip').value = document.querySelector('#paypal-form input[name="zip_code"]').value;
+    }
+    </script>
 </body>
 </html>

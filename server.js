@@ -140,4 +140,12 @@ app.get('/crypto-checkout/:id', (req, res) => {
     });
 });
 
+
+app.get('/paypal-checkout/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        res.render('paypal-checkout', { product: p, user: req.session.userId });
+    });
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Payment — <%= product.name %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .paypal-page { max-width: 500px; margin: 3rem auto; text-align: center; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+        .paypal-logo { margin-bottom: 2rem; }
+        .paypal-amount { font-size: 2rem; font-weight: 800; color: #003087; margin: 1rem 0; }
+        .paypal-email { background: #f5f5f5; padding: 1.5rem; border-radius: 16px; font-size: 1.1rem; margin: 1.5rem 0; }
+        .paypal-email strong { color: #0070BA; font-size: 1.3rem; }
+        .copy-btn { background: #0070BA; color: white; border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+        .steps { text-align: left; margin: 1.5rem 0; color: #666; line-height: 2; }
+        .back-btn { color: #999; text-decoration: none; margin-top: 1rem; display: inline-block; }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="paypal-page">
+        <div class="paypal-logo">
+            <img src="https://img.icons8.com/color/96/paypal.png" height="60" alt="PayPal">
+        </div>
+        <h2>Complete Your Payment</h2>
+        <div class="paypal-amount">€<%= product.price.toFixed(2) %></div>
+        <div class="paypal-email">
+            Send payment to:<br>
+            <strong>32swaroski@gmail.com</strong>
+        </div>
+        <div class="steps">
+            <p>1. Open PayPal app or website</p>
+            <p>2. Send <strong>€<%= product.price.toFixed(2) %></strong> to:</p>
+            <p style="font-size:1.2rem;color:#0070BA;text-align:center;"><strong>32swaroski@gmail.com</strong></p>
+            <p>3. Use "Friends & Family" option</p>
+            <p>4. Add your order reference: <strong><%= product.name %></strong></p>
+        </div>
+        <button class="copy-btn" onclick="copyEmail()">Copy PayPal Email</button>
+        <br>
+        <a href="/product/<%= product.id %>" class="back-btn">← Back to product</a>
+    </div>
+    <%- include('partials/footer') %>
+    <script>
+    function copyEmail() {
+        navigator.clipboard.writeText('32swaroski@gmail.com');
+        alert('PayPal email copied! Send €<%= product.price.toFixed(2) %> to 32swaroski@gmail.com');
+    }
+    </script>
+</body>
+</html>
