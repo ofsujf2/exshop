@@ -17,15 +17,14 @@
         .input-group input { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
         .input-group input:focus { border-color: #e91e63; }
         .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 1rem; }
-        .btn-crypto-main { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; box-shadow: 0 4px 16px rgba(240,185,11,0.15); margin-bottom: 1rem; }
+        .btn-crypto-main { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; margin-bottom: 1rem; }
         .crypto-list { display: none; margin-bottom: 1rem; }
         .crypto-list.show { display: block; }
         .crypto-option { width: 100%; display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 14px; font-weight: 600; border: 2px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.8); cursor: pointer; margin-bottom: 0.5rem; transition: all 0.3s; }
         .crypto-option:hover { border-color: #e91e63; }
         .crypto-option.selected { border-color: #2e7d32; background: rgba(46,125,50,0.05); }
-        .crypto-img { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; }
-        .crypto-img img { width: 100%; height: 100%; object-fit: cover; }
-        .crypto-address-box { display: none; background: #f5f5f5; padding: 1rem; border-radius: 12px; margin-top: 0.5rem; word-break: break-all; font-size: 0.8rem; color: #333; }
+        .crypto-img { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+        .crypto-address-box { display: none; background: #f5f5f5; padding: 1rem; border-radius: 12px; margin-top: 0.5rem; word-break: break-all; font-size: 0.8rem; color: #333; font-family: monospace; }
         .crypto-option.selected .crypto-address-box { display: block; }
         .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 20px; padding: 1.5rem; }
         .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
@@ -38,6 +37,7 @@
         .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; padding: 0.3rem 0; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; padding-top: 0.5rem; }
         .free { color: #2e7d32; font-weight: 700; }
+        .wallet-notice { background: #fff3e0; border: 1px solid #ffcc02; border-radius: 12px; padding: 1rem; margin-top: 0.5rem; font-size: 0.85rem; color: #e65100; text-align: center; font-weight: 600; }
         @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -62,36 +62,38 @@
                     <input type="hidden" name="payment_method" id="payment_method" value="paypal">
                     
                     <button type="submit" class="btn-paypal" onclick="document.getElementById('payment_method').value='paypal'">
-                        <img src="https://img.icons8.com/color/48/paypal.png" height="20" alt="">
-                        Pay with PayPal
+                        <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal"> Pay with PayPal
                     </button>
 
-                    <button type="button" class="btn-crypto-main" onclick="toggleCrypto()" id="btn-crypto-toggle">
-                        <span style="font-size:1.2rem;">₿</span> Pay with Crypto
+                    <button type="button" class="btn-crypto-main" onclick="toggleCrypto()">
+                        <span style="font-size:1.5rem;">₿</span> Pay with Crypto
                     </button>
 
                     <div class="crypto-list" id="crypto-list">
                         <div class="crypto-option" onclick="selectCrypto('bitcoin', this)">
-                            <div class="crypto-img" style="background:#F7931A;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png" alt="BTC"></div>
-                            <div style="flex:1;"><strong>Bitcoin (BTC)</strong></div>
-                            <div class="crypto-address-box"><%= wallets.BTC %></div>
+                            <div class="crypto-img" style="background:#F7931A;">₿</div>
+                            <div style="flex:1;"><strong>Bitcoin (BTC)</strong><br><span style="font-size:0.75rem;color:#999;">Network: Bitcoin</span></div>
+                            <div class="crypto-address-box">bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</div>
                         </div>
                         <div class="crypto-option" onclick="selectCrypto('ethereum', this)">
-                            <div class="crypto-img" style="background:#627EEA;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png" alt="ETH"></div>
-                            <div style="flex:1;"><strong>Ethereum (ETH)</strong></div>
-                            <div class="crypto-address-box"><%= wallets.ETH %></div>
+                            <div class="crypto-img" style="background:#627EEA;">Ξ</div>
+                            <div style="flex:1;"><strong>Ethereum (ETH)</strong><br><span style="font-size:0.75rem;color:#999;">Network: ERC20</span></div>
+                            <div class="crypto-address-box">0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</div>
                         </div>
                         <div class="crypto-option" onclick="selectCrypto('solana', this)">
-                            <div class="crypto-img" style="background:#9945FF;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Solana_cryptocurrency_two.jpg/640px-Solana_cryptocurrency_two.jpg" alt="SOL"></div>
-                            <div style="flex:1;"><strong>Solana (SOL)</strong></div>
-                            <div class="crypto-address-box"><%= wallets.SOL %></div>
+                            <div class="crypto-img" style="background:linear-gradient(135deg,#9945FF,#14F195);">◎</div>
+                            <div style="flex:1;"><strong>Solana (SOL)</strong><br><span style="font-size:0.75rem;color:#999;">Network: Solana</span></div>
+                            <div class="crypto-address-box">2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</div>
                         </div>
                         <div class="crypto-option" onclick="selectCrypto('litecoin', this)">
-                            <div class="crypto-img" style="background:#345D9D;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Litecoin_Logo.svg/1200px-Litecoin_Logo.svg.png" alt="LTC"></div>
-                            <div style="flex:1;"><strong>Litecoin (LTC)</strong></div>
-                            <div class="crypto-address-box"><%= wallets.LTC %></div>
+                            <div class="crypto-img" style="background:#345D9D;">Ł</div>
+                            <div style="flex:1;"><strong>Litecoin (LTC)</strong><br><span style="font-size:0.75rem;color:#999;">Network: Litecoin</span></div>
+                            <div class="crypto-address-box">LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</div>
                         </div>
-                        <button type="submit" class="btn-crypto-main" style="margin-top:0.5rem;background:linear-gradient(135deg,#e91e63,#c2185b);color:white;border:none;">
+                        <div class="wallet-notice">
+                            ⚠️ Send the exact amount to the wallet above.<br>Your order will be processed after payment confirmation.
+                        </div>
+                        <button type="submit" class="btn-crypto-main" style="margin-top:0.5rem;background:linear-gradient(135deg,#e91e63,#c2185b);color:white;border:none;" onclick="document.getElementById('payment_method').value=document.querySelector('.crypto-option.selected') ? document.querySelector('.crypto-option.selected').getAttribute('onclick').match(/'(.*?)'/)[1] : 'bitcoin'">
                             Complete Order with Crypto →
                         </button>
                     </div>
@@ -116,9 +118,7 @@
     </div>
     <%- include('partials/footer') %>
     <script>
-    function toggleCrypto() {
-        document.getElementById('crypto-list').classList.toggle('show');
-    }
+    function toggleCrypto() { document.getElementById('crypto-list').classList.toggle('show'); }
     function selectCrypto(method, el) {
         document.getElementById('payment_method').value = method;
         document.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('selected'));
