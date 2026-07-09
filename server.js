@@ -36,12 +36,12 @@ const upload = multer({ storage });
 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)`);
-    db.run(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, email TEXT UNIQUE, password TEXT, full_name TEXT, profile_pic TEXT, bio TEXT, created_at TEXT)`);
-    db.run(`CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)`);
-    db.run(`CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, payment_method TEXT, amount REAL, status TEXT DEFAULT 'completed', customer_name TEXT, customer_email TEXT, created_at TEXT)`);
-    db.run(`CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, sender_id INTEGER, receiver_id INTEGER, text TEXT, read INTEGER DEFAULT 0, created_at TEXT)`);
-    db.run(`CREATE TABLE IF NOT EXISTS payment_config (id INTEGER PRIMARY KEY AUTOINCREMENT, paypal_client_id TEXT, paypal_secret TEXT, paypal_verified INTEGER DEFAULT 0)`);
+    db.run("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, email TEXT UNIQUE, password TEXT, full_name TEXT, profile_pic TEXT, bio TEXT, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, payment_method TEXT, amount REAL, status TEXT DEFAULT 'completed', customer_name TEXT, customer_email TEXT, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, sender_id INTEGER, receiver_id INTEGER, text TEXT, read INTEGER DEFAULT 0, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS payment_config (id INTEGER PRIMARY KEY AUTOINCREMENT, paypal_client_id TEXT, paypal_secret TEXT, paypal_verified INTEGER DEFAULT 0)");
 });
 
 db.get("SELECT * FROM admin WHERE username = 'admin'", (err, row) => {
@@ -53,10 +53,10 @@ const requireAdmin = (req, res, next) => req.session.admin ? next() : res.redire
 
 function getPayPalToken(clientId, secret) {
     return new Promise((resolve, reject) => {
-        const auth = Buffer.from(`${clientId}:${secret}`).toString('base64');
+        const auth = Buffer.from(clientId + ':' + secret).toString('base64');
         https.request({
             hostname: 'api-m.paypal.com', path: '/v1/oauth2/token', method: 'POST',
-            headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/x-www-form-urlencoded' }
+            headers: { 'Authorization': 'Basic ' + auth, 'Content-Type': 'application/x-www-form-urlencoded' }
         }, (res) => { let d=''; res.on('data',c=>d+=c); res.on('end',()=>{try{resolve(JSON.parse(d))}catch(e){reject(e)}}); }).on('error', reject).write('grant_type=client_credentials').end();
     });
 }
@@ -89,11 +89,10 @@ app.get('/checkout/:id', (req, res) => {
 });
 
 app.post('/checkout/:id', (req, res) => {
-    const { name, email, payment_method } = req.body;
     db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, product) => {
         if (!product) return res.redirect('/');
         db.run("INSERT INTO orders (product_id, payment_method, amount, customer_name, customer_email, created_at) VALUES (?,?,?,?,?,datetime('now'))",
-            [product.id, payment_method || 'paypal', product.price, name || 'N/A', email || 'N/A']);
+            [product.id, req.body.payment_method || 'paypal', product.price, req.body.name || 'N/A', req.body.email || 'N/A']);
         db.run("UPDATE products SET sales_count = sales_count + 1 WHERE id = ?", [product.id]);
         res.redirect('/success');
     });
@@ -104,10 +103,10 @@ app.get('/cancel', (req, res) => res.render('cancel'));
 app.get('/register', (req, res) => res.render('register', { user: req.session.userId }));
 app.post('/register', (req, res) => {
     const { username, email, password, full_name } = req.body;
-    if (!username || !email || !password) return res.status(400).send('All fields required');
+    if (!username || !email || !password) return res.send('All fields required');
     db.run("INSERT INTO users (username, email, password, full_name, created_at) VALUES (?,?,?,?,datetime('now'))",
         [username, email, bcrypt.hashSync(password, 10), full_name], function(err) {
-            if (err) return res.status(400).send('Error');
+            if (err) return res.send('Error');
             req.session.userId = this.lastID;
             res.redirect('/');
         });
@@ -118,14 +117,16 @@ app.post('/login', (req, res) => {
     db.get("SELECT * FROM admin WHERE username = ?", [username], (err, admin) => {
         if (admin && bcrypt.compareSync(password, admin.password)) {
             req.session.admin = true;
-            return res.redirect('/admin');
+            req.session.save(() => res.redirect('/admin'));
+            return;
         }
         db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.userId = user.id;
-                return res.redirect('/');
+                req.session.save(() => res.redirect('/'));
+            } else {
+                res.send('<script>alert("Invalid credentials");window.location.href="/login";</script>');
             }
-            res.status(401).send('Invalid credentials');
         });
     });
 });
@@ -147,7 +148,7 @@ app.get('/messages', requireUser, (req, res) => res.render('messages', { contact
 app.get('/chat/:id', requireUser, (req, res) => {
     db.get("SELECT * FROM users WHERE id = ?", [req.params.id], (err, other) => {
         if (!other) return res.redirect('/messages');
-        db.all(`SELECT * FROM messages WHERE (sender_id=? AND receiver_id=?) OR (sender_id=? AND receiver_id=?) ORDER BY created_at ASC`,
+        db.all("SELECT * FROM messages WHERE (sender_id=? AND receiver_id=?) OR (sender_id=? AND receiver_id=?) ORDER BY created_at ASC",
             [req.session.userId, req.params.id, req.params.id, req.session.userId], (err, msgs) => {
                 res.render('chat', { messages: msgs || [], other_user: other, userId: req.session.userId });
             });
@@ -164,9 +165,10 @@ app.post('/admin/login', (req, res) => {
     db.get("SELECT * FROM admin WHERE username = ?", [req.body.username], (err, admin) => {
         if (admin && bcrypt.compareSync(req.body.password, admin.password)) {
             req.session.admin = true;
-            return res.redirect('/admin');
+            req.session.save(() => res.redirect('/admin'));
+        } else {
+            res.send('<script>alert("Invalid");window.location.href="/admin/login";</script>');
         }
-        res.status(401).send('Invalid');
     });
 });
 app.get('/admin', requireAdmin, (req, res) => {
@@ -182,8 +184,9 @@ app.post('/admin/add', requireAdmin, upload.single('image'), (req, res) => {
     const { name, description, price, category, stock } = req.body;
     const img = req.file ? req.file.filename : null;
     db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, created_at) VALUES (?,?,?,?,?,?,?,datetime('now'))",
-        [name, description, parseFloat(price), img, category || 'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100]);
-    res.redirect('/admin');
+        [name, description, parseFloat(price), img, category || 'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100], (err) => {
+            res.redirect('/admin');
+        });
 });
 app.get('/admin/delete/:id', requireAdmin, (req, res) => {
     db.run("DELETE FROM products WHERE id = ?", [req.params.id]);
@@ -196,8 +199,8 @@ app.post('/admin/save-keys', requireAdmin, async (req, res) => {
     db.get("SELECT * FROM payment_config LIMIT 1", (err, row) => {
         if (row) db.run("UPDATE payment_config SET paypal_client_id=?, paypal_secret=?, paypal_verified=? WHERE id=?", [paypal_client_id, paypal_secret, verified, row.id]);
         else db.run("INSERT INTO payment_config (paypal_client_id, paypal_secret, paypal_verified) VALUES (?,?,?)", [paypal_client_id, paypal_secret, verified]);
-        res.json({ success: true, message: verified ? '✅ PayPal Verified!' : '❌ Not verified' });
+        res.json({ success: true, message: verified ? 'Verified' : 'Not verified' });
     });
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`\n✅ http://localhost:${PORT}\n✅ admin / executive2026\n`));
+app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));
