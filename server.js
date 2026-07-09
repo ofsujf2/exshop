@@ -132,4 +132,12 @@ app.post('/admin/save-keys', requireAdmin, (req, res) => {
     res.json({ success: true });
 });
 
+
+app.get('/crypto-checkout/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        res.render('crypto-checkout', { product: p, user: req.session.userId });
+    });
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));
