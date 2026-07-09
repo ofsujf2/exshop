@@ -8,79 +8,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         .checkout-page { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; }
-        .checkout-progress { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 2.5rem; padding: 1.5rem 2rem; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.55); border-radius: 60px; }
-        .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; color: #bbb; text-transform: uppercase; letter-spacing: 0.05em; }
-        .progress-step.active { color: #e91e63; }
-        .progress-step.done { color: #2e7d32; }
-        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-        .progress-step.active .step-circle { background: linear-gradient(135deg, #e91e63, #c2185b); box-shadow: 0 4px 12px rgba(233,30,99,0.3); }
-        .progress-step.done .step-circle { background: #2e7d32; }
-        .progress-line { width: 60px; height: 3px; background: #e0e0e0; margin: 0 1rem 1.5rem; border-radius: 3px; }
-        .progress-line.done { background: #2e7d32; }
-        
-        .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
-        
-        .checkout-form-wrapper { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.55); border-radius: 24px; padding: 2.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
-        .checkout-form-wrapper h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.2rem; }
+        .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .checkout-form-wrapper { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 24px; padding: 2.5rem; }
+        .checkout-form-wrapper h3 { font-size: 1.3rem; font-weight: 700; margin: 1.5rem 0 1rem; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .input-group { margin-bottom: 1.2rem; }
-        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 0.3rem; }
-        .input-group input { width: 100%; padding: 1rem 1.2rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; background: rgba(255,255,255,0.8); }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
+        .input-group input { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
         .input-group input:focus { border-color: #e91e63; }
-        .form-section { margin-bottom: 2rem; }
-        
-        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); transition: all 0.3s; margin-top: 1rem; }
-        .btn-paypal:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,196,57,0.5); }
-        
-        .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.04); }
+        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 1rem; }
+        .btn-crypto-main { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; box-shadow: 0 4px 16px rgba(240,185,11,0.15); margin-bottom: 1rem; }
+        .crypto-list { display: none; margin-bottom: 1rem; }
+        .crypto-list.show { display: block; }
+        .crypto-option { width: 100%; display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 14px; font-weight: 600; border: 2px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.8); cursor: pointer; margin-bottom: 0.5rem; transition: all 0.3s; }
+        .crypto-option:hover { border-color: #e91e63; }
+        .crypto-option.selected { border-color: #2e7d32; background: rgba(46,125,50,0.05); }
+        .crypto-img { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; }
+        .crypto-img img { width: 100%; height: 100%; object-fit: cover; }
+        .crypto-address-box { display: none; background: #f5f5f5; padding: 1rem; border-radius: 12px; margin-top: 0.5rem; word-break: break-all; font-size: 0.8rem; color: #333; }
+        .crypto-option.selected .crypto-address-box { display: block; }
+        .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 20px; padding: 1.5rem; }
         .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
         .summary-product { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
-        .summary-img { width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(155deg, #fce4ec, #f8bbd0); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .summary-img { width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(155deg, #fce4ec, #f8bbd0); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .summary-img img { width: 70%; height: 70%; object-fit: contain; }
         .summary-details strong { font-size: 0.85rem; }
-        .summary-details p { font-size: 0.72rem; color: #999; margin-top: 0.2rem; }
+        .summary-details p { font-size: 0.72rem; color: #999; }
         .summary-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 0.8rem 0; }
         .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; padding: 0.3rem 0; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; padding-top: 0.5rem; }
         .free { color: #2e7d32; font-weight: 700; }
-        
         @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
-    
     <div class="checkout-page">
-        <div class="checkout-progress">
-            <div class="progress-step done"><div class="step-circle">✓</div><span>Shipping</span></div>
-            <div class="progress-line done"></div>
-            <div class="progress-step active"><div class="step-circle">2</div><span>Payment</span></div>
-            <div class="progress-line"></div>
-            <div class="progress-step"><div class="step-circle">3</div><span>Confirmation</span></div>
-        </div>
-
         <div class="checkout-grid">
             <div class="checkout-form-wrapper">
-                <form method="POST" action="/checkout/<%= product.id %>">
-                    <div class="form-section">
-                        <h3>Shipping Details</h3>
-                        <div class="form-row">
-                            <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
-                            <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
-                        </div>
-                        <div class="input-group"><label>Address</label><input type="text" name="address" placeholder="123 Main Street" required></div>
-                        <div class="form-row">
-                            <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
-                            <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
-                        </div>
+                <form method="POST" action="/checkout/<%= product.id %>" id="checkout-form">
+                    <h3>Shipping Details</h3>
+                    <div class="form-row">
+                        <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
+                        <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
+                    </div>
+                    <div class="input-group"><label>Address</label><input type="text" name="address" placeholder="123 Main Street" required></div>
+                    <div class="form-row">
+                        <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
+                        <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
                     </div>
 
-                    <div class="form-section">
-                        <h3>Payment</h3>
-                        <p style="color:#999;margin-bottom:1rem;font-size:0.9rem;">You will be redirected to PayPal to complete your payment securely.</p>
-                        <button type="submit" class="btn-paypal">
-                            <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal">
-                            Pay with PayPal
+                    <h3>Payment Method</h3>
+                    <input type="hidden" name="payment_method" id="payment_method" value="paypal">
+                    
+                    <button type="submit" class="btn-paypal" onclick="document.getElementById('payment_method').value='paypal'">
+                        <img src="https://img.icons8.com/color/48/paypal.png" height="20" alt="">
+                        Pay with PayPal
+                    </button>
+
+                    <button type="button" class="btn-crypto-main" onclick="toggleCrypto()" id="btn-crypto-toggle">
+                        <span style="font-size:1.2rem;">₿</span> Pay with Crypto
+                    </button>
+
+                    <div class="crypto-list" id="crypto-list">
+                        <div class="crypto-option" onclick="selectCrypto('bitcoin', this)">
+                            <div class="crypto-img" style="background:#F7931A;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png" alt="BTC"></div>
+                            <div style="flex:1;"><strong>Bitcoin (BTC)</strong></div>
+                            <div class="crypto-address-box"><%= wallets.BTC %></div>
+                        </div>
+                        <div class="crypto-option" onclick="selectCrypto('ethereum', this)">
+                            <div class="crypto-img" style="background:#627EEA;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png" alt="ETH"></div>
+                            <div style="flex:1;"><strong>Ethereum (ETH)</strong></div>
+                            <div class="crypto-address-box"><%= wallets.ETH %></div>
+                        </div>
+                        <div class="crypto-option" onclick="selectCrypto('solana', this)">
+                            <div class="crypto-img" style="background:#9945FF;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Solana_cryptocurrency_two.jpg/640px-Solana_cryptocurrency_two.jpg" alt="SOL"></div>
+                            <div style="flex:1;"><strong>Solana (SOL)</strong></div>
+                            <div class="crypto-address-box"><%= wallets.SOL %></div>
+                        </div>
+                        <div class="crypto-option" onclick="selectCrypto('litecoin', this)">
+                            <div class="crypto-img" style="background:#345D9D;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Litecoin_Logo.svg/1200px-Litecoin_Logo.svg.png" alt="LTC"></div>
+                            <div style="flex:1;"><strong>Litecoin (LTC)</strong></div>
+                            <div class="crypto-address-box"><%= wallets.LTC %></div>
+                        </div>
+                        <button type="submit" class="btn-crypto-main" style="margin-top:0.5rem;background:linear-gradient(135deg,#e91e63,#c2185b);color:white;border:none;">
+                            Complete Order with Crypto →
                         </button>
                     </div>
                 </form>
@@ -90,7 +102,7 @@
                 <div class="summary-card">
                     <h3>Order Summary</h3>
                     <div class="summary-product">
-                        <div class="summary-img"><% if (product.image) { %><img src="/uploads/<%= product.image %>" alt="<%= product.name %>"><% } %></div>
+                        <div class="summary-img"><% if (product.image) { %><img src="/uploads/<%= product.image %>" alt=""><% } %></div>
                         <div class="summary-details"><strong><%= product.name %></strong><p><%= product.description.substring(0,60) %>...</p></div>
                     </div>
                     <div class="summary-divider"></div>
@@ -103,5 +115,15 @@
         </div>
     </div>
     <%- include('partials/footer') %>
+    <script>
+    function toggleCrypto() {
+        document.getElementById('crypto-list').classList.toggle('show');
+    }
+    function selectCrypto(method, el) {
+        document.getElementById('payment_method').value = method;
+        document.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+    </script>
 </body>
 </html>
