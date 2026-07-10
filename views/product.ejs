@@ -4,6 +4,6 @@
 <h1><%= product.name %></h1><div class="price" style="font-size:2rem;">&euro;<%= product.price.toFixed(2) %></div>
 <p><%= product.description %></p>
 <% if (product.gallery) { try { const g = JSON.parse(product.gallery); if(g.length){ %><div style="display:flex;gap:0.5rem;margin:1rem 0"><% g.forEach(img => { %><img src="<%= img %>" style="width:80px;height:80px;object-fit:cover;border-radius:12px;"><% }) %></div><% }} catch(e) {} } %>
-<a href="/checkout/<%= product.id %>" class="btn" style="display:inline-block;margin-top:1rem;">Buy Now</a>
+<a href="/checkout/<%= product.id %>" class="btn" style="display:inline-block;margin-top:1rem;">Checkout</a>
 </div>
 <%- include('partials/footer') %></body></html>

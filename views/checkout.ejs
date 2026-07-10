@@ -1,12 +1,12 @@
 <!DOCTYPE html><html><head><title>Checkout</title><link rel="stylesheet" href="/css/style.css"></head><body>
 <%- include('partials/navbar') %>
 <div style="max-width:600px;margin:2rem auto;background:var(--glass);padding:2rem;border-radius:24px;">
-<h2>Complete Order</h2><p style="font-size:1.5rem;font-weight:700;">&euro;<%= product.price.toFixed(2) %></p>
+<h2>Complete Order</h2><p>&euro;<%= product.price.toFixed(2) %></p>
 <form method="POST" action="/checkout/<%= product.id %>">
 <input name="name" placeholder="Full Name" required style="width:100%;padding:0.7rem;margin-bottom:0.5rem;border-radius:12px;border:1px solid #ddd;">
 <input name="email" placeholder="Email" required style="width:100%;padding:0.7rem;margin-bottom:1rem;border-radius:12px;border:1px solid #ddd;">
-<button type="submit" class="btn btn-revolut" style="width:100%;margin-bottom:0.5rem;">Pay with Revolut</button>
+<button type="submit" class="btn" style="width:100%;">Pay with Revolut</button>
 </form>
-<a href="/crypto-checkout/<%= product.id %>" class="btn btn-crypto" style="display:block;text-align:center;">Pay with Crypto</a>
+<a href="/crypto-checkout/<%= product.id %>" class="btn" style="background:#1a1a2e;color:#f0b90b;margin-top:0.5rem;display:block;text-align:center;">Pay with Crypto</a>
 </div>
 <%- include('partials/footer') %></body></html>
