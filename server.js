@@ -120,26 +120,20 @@ app.get('/admin/delete/:id', requireAdmin, (req, res) => {
 });
 
 
+
 app.get('/search', (req, res) => {
-    const query = req.query.q || '';
-    db.all("SELECT * FROM products WHERE name LIKE ? OR description LIKE ?", ['%' + query + '%', '%' + query + '%'], (err, products) => {
-        res.render('home', { products: products || [], top_products: [], current_category: 'All', user: req.session.userId, searchQuery: query });
-    });
-});
-
-
-app.get('/crypto-checkout/:id', (req, res) => {
-    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
-        if (!p) return res.redirect('/');
-        res.render('crypto-checkout', { product: p, user: req.session.userId });
-    });
-});
-
-app.get('/paypal-checkout/:id', (req, res) => {
-    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
-        if (!p) return res.redirect('/');
-        res.render('paypal-checkout', { product: p, user: req.session.userId });
-    });
+    const q = req.query.q || '';
+    if (!q) return res.redirect('/');
+    db.all("SELECT * FROM products WHERE name LIKE ? OR description LIKE ? OR category LIKE ?", 
+        ['%' + q + '%', '%' + q + '%', '%' + q + '%'], 
+        (err, products) => {
+            res.render('home', { 
+                products: products || [], 
+                top_products: [], 
+                current_category: 'All', 
+                user: req.session.userId 
+            });
+        });
 });
 
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));
