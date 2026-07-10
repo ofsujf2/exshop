@@ -1,105 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard — Executive Shop</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <%- include('partials/navbar') %>
-    <div class="admin-container">
-        <h1>Dashboard</h1>
-        <p style="color:var(--text-secondary);margin-bottom:2rem;">Manage your store</p>
-
-        <!-- STATS -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background:linear-gradient(135deg,#e91e63,#c2185b);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-                </div>
-                <div><span class="stat-value"><%= products.length %></span><span class="stat-label">Total Products</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                </div>
-                <div><span class="stat-value">0</span><span class="stat-label">Total Orders</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:linear-gradient(135deg,#f59e0b,#e65100);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </div>
-                <div><span class="stat-value">€0.00</span><span class="stat-label">Revenue</span></div>
-            </div>
-        </div>
-
-        <!-- ADD PRODUCT -->
-        <div class="section-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add New Product
-        </div>
-        <form method="POST" action="/admin/add" enctype="multipart/form-data" class="admin-form">
-            <div class="form-row-3">
-                <div class="form-group"><label>Product Name</label><input type="text" name="name" required></div>
-                <div class="form-group"><label>Price (€)</label><input type="number" step="0.01" name="price" required></div>
-                <div class="form-group"><label>Stock</label><input type="number" name="stock" value="100"></div>
-            </div>
-            <div class="form-group"><label>Description</label><textarea name="description" required></textarea></div>
-            <div class="form-row-3">
-                <div class="form-group"><label>Category</label><select name="category"><% categories.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %></select></div>
-                <div class="form-group"><label>Image</label><input type="file" name="image" accept="image/*"></div>
-            </div>
-            <button type="submit" class="btn-submit">Publish Product</button>
-        </form>
-
-        <!-- PAYMENT KEYS -->
-        <div class="section-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            PayPal API Keys
-        </div>
-        <div class="api-keys-form">
-            <input type="text" id="paypal_client_id" placeholder="PayPal Client ID" value="">
-            <input type="password" id="paypal_secret" placeholder="PayPal Secret" value="">
-            <button onclick="saveKeys()" class="btn-submit">Save Keys</button>
-            <span id="api-status" style="margin-left:1rem;font-weight:600;"></span>
-        </div>
-
-        <!-- CATALOG -->
-        <div class="section-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
-            Catalog (<%= products.length %>)
-        </div>
-        <div class="catalog-grid">
-            <% products.forEach(p => { %>
-            <div class="catalog-item">
-                <div class="catalog-img"><% if (p.image) { %><img src="/uploads/<%= p.image %>" alt=""><% } %></div>
-                <div class="catalog-info">
-                    <strong><%= p.name %></strong>
-                    <span>€<%= p.price.toFixed(2) %> | Stock: <%= p.stock %> | <%= p.sales_count %> sold</span>
-                </div>
-                <a href="/admin/delete/<%= p.id %>" class="btn-delete" onclick="return confirm('Delete?')">Remove</a>
-            </div>
-            <% }) %>
-        </div>
-
-        <a href="/logout" class="btn-logout">Sign Out</a>
-    </div>
-    <%- include('partials/footer') %>
-    <script>
-    function saveKeys(){
-        fetch('/admin/save-keys',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({
-                paypal_client_id:document.getElementById('paypal_client_id').value,
-                paypal_secret:document.getElementById('paypal_secret').value
-            })
-        }).then(r=>r.json()).then(d=>{
-            document.getElementById('api-status').textContent=d.message;
-            document.getElementById('api-status').style.color=d.success?'#2e7d32':'#c62828';
-        });
-    }
-    </script>
-</body>
-</html>
+<!DOCTYPE html><html><head><title>Admin</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div class="admin-container">
+<h1>Dashboard</h1>
+<h3>Add Product (Multi-Image)</h3>
+<form method="POST" action="/admin/add-multi" enctype="multipart/form-data">
+<input name="name" placeholder="Product Name" required>
+<textarea name="description" placeholder="Description"></textarea>
+<input name="price" type="number" step="0.01" placeholder="Price" required>
+<select name="category"><% categories.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %></select>
+<input name="stock" type="number" value="100">
+<label>Images (max 10)</label>
+<input type="file" name="images" multiple accept="image/*">
+<button class="btn" type="submit">Upload Product</button>
+</form>
+<h3>Products (<%= products.length %>)</h3>
+<% products.forEach(p => { %><div style="display:flex;justify-content:space-between;padding:0.5rem;border-bottom:1px solid #eee;"><span><%= p.name %> - &euro;<%= p.price %></span><a href="/admin/delete/<%= p.id %>" style="color:red;">Delete</a></div><% }) %>
+<a href="/logout" class="btn" style="background:#333;">Logout</a>
+</div>
+<%- include('partials/footer') %></body></html>

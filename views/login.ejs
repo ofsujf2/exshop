@@ -1,25 +1,2 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Executive Shop</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <%- include('partials/navbar') %>
-    <div class="auth-page">
-        <div class="auth-card">
-            <h1>Sign In</h1>
-            <form method="POST" action="/login">
-                <div class="input-group"><label>Username</label><input type="text" name="username" required></div>
-                <div class="input-group"><label>Password</label><input type="password" name="password" required></div>
-                <button type="submit" class="btn-primary">Sign In</button>
-            </form>
-            <p class="auth-link">Don't have an account? <a href="/register">Register</a></p>
-        </div>
-    </div>
-    <%- include('partials/footer') %>
-</body>
-</html>
+<!DOCTYPE html><html><head><title>Login</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %><div class="auth-card"><h2>Sign In</h2><form method="POST" action="/login"><input name="username" placeholder="Username" required><input name="password" type="password" placeholder="Password" required><button class="btn" style="width:100%;">Login</button></form></div><%- include('partials/footer') %></body></html>

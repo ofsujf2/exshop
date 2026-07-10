@@ -24,26 +24,46 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 const uploadMulti = multer({ storage }).array('images', 10);
 
-['public/uploads', 'public/css'].forEach(d => {
-    if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
-});
+['public/uploads','public/css'].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
 
 db.serialize(() => {
-
-
     db.run("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT, full_name TEXT, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, amount REAL, customer_name TEXT, customer_email TEXT, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS payment_config (id INTEGER PRIMARY KEY AUTOINCREMENT, paypal_client_id TEXT, paypal_secret TEXT, paypal_verified INTEGER DEFAULT 0)");
+    // Aggiungi colonna gallery in modo sicuro
+    db.run("ALTER TABLE products ADD COLUMN gallery TEXT DEFAULT '[]'", (err) => {});
     db.run("INSERT OR IGNORE INTO admin (id, username, password) VALUES (1, 'admin', ?)", [bcrypt.hashSync('executive2026', 10)]);
 });
 
 const requireAdmin = (req, res, next) => req.session.admin ? next() : res.redirect('/admin/login');
 
+// ROTTE PUBBLICHE
 app.get('/', (req, res) => {
-    db.all("SELECT * FROM products ORDER BY sales_count DESC", (err, products) => {
+    const cat = req.query.category || 'All';
+    const query = cat === 'All' ? "SELECT * FROM products" : "SELECT * FROM products WHERE category = ?";
+    db.all(query, cat === 'All' ? [] : [cat], (err, products) => {
         db.all("SELECT * FROM products ORDER BY sales_count DESC LIMIT 10", (err, top) => {
-            res.render('home', { products: products || [], top_products: top || [], current_category: 'All', user: req.session.userId });
+            res.render('home', { products: products || [], top_products: top || [], current_category: cat, user: req.session.userId });
         });
+    });
+});
+
+app.get('/products', (req, res) => {
+    const cat = req.query.category || '';
+    const sort = req.query.sort || 'newest';
+    let sql = "SELECT * FROM products WHERE 1=1";
+    let params = [];
+    if (cat) { sql += " AND category = ?"; params.push(cat); }
+    switch(sort) {
+        case 'price-asc': sql += " ORDER BY price ASC"; break;
+        case 'price-desc': sql += " ORDER BY price DESC"; break;
+        case 'popular': sql += " ORDER BY sales_count DESC"; break;
+        default: sql += " ORDER BY created_at DESC";
+    }
+    db.all(sql, params, (err, products) => {
+        res.render('products', { products: products || [], current_category: cat, current_sort: sort, user: req.session.userId });
     });
 });
 
@@ -72,12 +92,19 @@ app.post('/checkout/:id', (req, res) => {
 });
 
 app.get('/success', (req, res) => res.render('success'));
+app.get('/crypto-checkout/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, p) => {
+        if (!p) return res.redirect('/');
+        res.render('crypto-checkout', { product: p });
+    });
+});
+
 app.get('/register', (req, res) => res.render('register', { user: req.session.userId }));
 app.post('/register', (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, full_name } = req.body;
     if (!username || !email || !password) return res.send('All fields required');
-    db.run("INSERT INTO users (username, email, password, created_at) VALUES (?,?,?,datetime('now'))",
-        [username, email, bcrypt.hashSync(password, 10)], function(err) {
+    db.run("INSERT INTO users (username, email, password, full_name, created_at) VALUES (?,?,?,?,datetime('now'))",
+        [username, email, bcrypt.hashSync(password, 10), full_name], function(err) {
             if (err) return res.send('Error');
             req.session.userId = this.lastID;
             res.redirect('/');
@@ -90,11 +117,18 @@ app.post('/login', (req, res) => {
             req.session.admin = true;
             return req.session.save(() => res.redirect('/admin'));
         }
-        res.send('<script>alert("Invalid");window.location.href="/login";</script>');
+        db.get("SELECT * FROM users WHERE username = ?", [req.body.username], (err, user) => {
+            if (user && bcrypt.compareSync(req.body.password, user.password)) {
+                req.session.userId = user.id;
+                return req.session.save(() => res.redirect('/'));
+            }
+            res.send('<script>alert("Invalid");window.location.href="/login";</script>');
+        });
     });
 });
 app.get('/logout', (req, res) => { req.session.destroy(); res.redirect('/'); });
 
+// ADMIN
 app.get('/admin/login', (req, res) => res.render('admin-login'));
 app.post('/admin/login', (req, res) => {
     db.get("SELECT * FROM admin WHERE username = ?", [req.body.username], (err, admin) => {
@@ -107,53 +141,31 @@ app.post('/admin/login', (req, res) => {
 });
 app.get('/admin', requireAdmin, (req, res) => {
     db.all("SELECT * FROM products", (err, products) => {
-        res.render('admin', { products: products || [], orders: [], categories: ['All','Gaming','Electronics','Robux','Clothes','Accessories','Adapters','Home','Garden'] });
+        res.render('admin', { products: products || [], categories: ['All','Electronics','Gaming','Clothes','Accessories','Home','Garden','Adapters','Robux'] });
     });
 });
 app.post('/admin/add', requireAdmin, upload.single('image'), (req, res) => {
-    const { name, description, price, category, stock } = req.body;
-    const img = req.file ? req.file.filename : null;
+    const { name, description, price, category, stock, image_url, gallery } = req.body;
+    const img = req.file ? req.file.filename : (image_url || null);
+    const galleryData = gallery || '[]';
     db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, gallery, created_at) VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
-        [name, description, parseFloat(price)||0, img, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, gallery]);
-    res.redirect('/admin');
+        [name, description, parseFloat(price)||0, img, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, galleryData],
+        (err) => { res.redirect('/admin'); });
+});
+app.post('/admin/add-multi', requireAdmin, (req, res) => {
+    uploadMulti(req, res, (err) => {
+        if (err) return res.send('Upload error');
+        const { name, description, price, category, stock } = req.body;
+        const mainImg = req.files && req.files.length > 0 ? req.files[0].filename : null;
+        const gallery = req.files ? req.files.slice(1).map(f => '/uploads/' + f.filename) : [];
+        db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, gallery, created_at) VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
+            [name, description, parseFloat(price)||0, mainImg, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, JSON.stringify(gallery)],
+            (err) => { res.redirect('/admin'); });
+    });
 });
 app.get('/admin/delete/:id', requireAdmin, (req, res) => {
     db.run("DELETE FROM products WHERE id = ?", [req.params.id]);
     res.redirect('/admin');
-});
-
-
-
-app.get('/search', (req, res) => {
-    const q = req.query.q || '';
-    if (!q) return res.redirect('/');
-    db.all("SELECT * FROM products WHERE name LIKE ? OR description LIKE ? OR category LIKE ?", 
-        ['%' + q + '%', '%' + q + '%', '%' + q + '%'], 
-        (err, products) => {
-            res.render('home', { 
-                products: products || [], 
-                top_products: [], 
-                current_category: 'All', 
-                user: req.session.userId 
-            });
-        });
-});
-
-
-app.post('/admin/add-multi', requireAdmin, (req, res) => {
-    uploadMulti(req, res, (err) => {
-        if (err) return res.send('Error uploading files');
-        const { name, description, price, category, stock } = req.body;
-        const mainImg = req.files && req.files.length > 0 ? req.files[0].filename : null;
-        const gallery = req.files ? req.files.slice(1).map(f => '/uploads/' + f.filename) : [];
-        
-        db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, gallery, created_at) VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
-            [name, description, parseFloat(price)||0, mainImg, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, JSON.stringify(gallery)],
-            (err) => {
-                if (err) return res.send('Error saving product');
-                res.redirect('/admin');
-            });
-    });
 });
 
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));

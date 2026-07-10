@@ -1,129 +1,31 @@
-/* ============================================================
-   EXECUTIVE SHOP - Modern Glassmorphism Pink
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
-
-:root {
-    --pink: #e91e63;
-    --pink-dark: #c2185b;
-    --pink-light: #fce4ec;
-    --bg: #fdf2f5;
-    --glass: rgba(255,255,255,0.7);
-    --glass-border: rgba(255,255,255,0.5);
-    --text: #1a1a1a;
-    --text-secondary: #666;
-    --radius: 24px;
-    --shadow: 0 8px 32px rgba(194,24,91,0.08);
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: linear-gradient(135deg, #fce4ec 0%, #fff 50%, #f8bbd0 100%);
-    min-height: 100vh;
-    color: var(--text);
-}
-
-/* ---- NAVBAR ---- */
-.navbar {
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 0 2rem;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-.navbar .logo { font-size: 1.4rem; font-weight: 800; color: var(--text); text-decoration: none; }
-.navbar .logo span { color: var(--pink); }
-.nav-links { display: flex; gap: 2rem; align-items: center; }
-.nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s; }
-.nav-links a:hover { color: var(--pink); }
-
-/* ---- HERO ---- */
-.hero { text-align: center; padding: 5rem 2rem 3rem; }
-.hero h1 { font-size: 4rem; font-weight: 900; }
-.hero h1 span { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero p { color: var(--text-secondary); font-size: 1.1rem; max-width: 500px; margin: 1rem auto; }
-
-/* ---- CARDS ---- */
-.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding: 1rem; max-width: 1200px; margin: 0 auto; }
-.product-card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s; }
-.product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(194,24,91,0.12); }
-.product-card .image-wrapper { height: 220px; background: linear-gradient(135deg, #fce4ec, #f8bbd0); display: flex; align-items: center; justify-content: center; }
-.product-card .image-wrapper img { max-width: 80%; max-height: 80%; object-fit: contain; }
-.product-card .card-body { padding: 1.2rem; }
-.product-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-.product-card .desc { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.8rem; }
-.product-card .price { font-size: 1.3rem; font-weight: 800; color: var(--pink); }
-
-/* ---- BUTTONS ---- */
-.btn {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--pink), var(--pink-dark));
-    color: white;
-    padding: 0.6rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 700;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(233,30,99,0.2);
-}
-.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(233,30,99,0.3); }
-
-/* ---- FORMS ---- */
-.auth-card {
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    padding: 2rem;
-    border-radius: var(--radius);
-    max-width: 400px;
-    margin: 3rem auto;
-    box-shadow: var(--shadow);
-}
-.auth-card input {
-    width: 100%;
-    padding: 0.8rem;
-    border: 2px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-    margin-bottom: 0.8rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* ---- ADMIN ---- */
-.admin-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-}
-.admin-container input,
-.admin-container textarea,
-.admin-container select {
-    width: 100%;
-    padding: 0.7rem;
-    border: 2px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-    margin-bottom: 0.8rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* ---- FOOTER ---- */
-footer { text-align: center; padding: 1.5rem; color: var(--text-secondary); font-size: 0.85rem; }
-
-/* ---- RESPONSIVE ---- */
-@media (max-width: 768px) {
-    .hero h1 { font-size: 2.5rem; }
-    .nav-links { gap: 1rem; }
-}
+:root{--pink:#e91e63;--pink-dark:#c2185b;--pink-light:#fce4ec;--bg:#fdf2f5;--glass:rgba(255,255,255,0.7);--glass-border:rgba(255,255,255,0.5);--text:#1a1a1a;--text-secondary:#666;--radius:24px;--shadow:0 8px 32px rgba(194,24,91,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#fce4ec 0%,#fff 50%,#f8bbd0 100%);min-height:100vh;color:var(--text)}
+.navbar{background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.navbar .logo{font-size:1.4rem;font-weight:800;color:var(--text);text-decoration:none}
+.navbar .logo span{color:var(--pink)}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{color:var(--text-secondary);text-decoration:none;font-weight:600;font-size:0.9rem;transition:color 0.3s}
+.nav-links a:hover{color:var(--pink)}
+.hero{text-align:center;padding:5rem 2rem 3rem}
+.hero h1{font-size:4rem;font-weight:900}
+.hero h1 span{background:linear-gradient(135deg,var(--pink),var(--pink-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text-secondary);font-size:1.1rem;max-width:500px;margin:1rem auto}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;padding:1rem;max-width:1200px;margin:0 auto}
+.product-card{background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform 0.3s,box-shadow 0.3s}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(194,24,91,0.12)}
+.product-card .image-wrapper{height:220px;background:linear-gradient(135deg,#fce4ec,#f8bbd0);display:flex;align-items:center;justify-content:center}
+.product-card .image-wrapper img{max-width:80%;max-height:80%;object-fit:contain}
+.product-card .card-body{padding:1.2rem}
+.product-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem}
+.product-card .desc{color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.8rem}
+.product-card .price{font-size:1.3rem;font-weight:800;color:var(--pink)}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--pink-dark));color:white;padding:0.6rem 1.5rem;border-radius:50px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(233,30,99,0.2)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(233,30,99,0.3)}
+.auth-card{background:var(--glass);backdrop-filter:blur(20px);padding:2rem;border-radius:var(--radius);max-width:400px;margin:3rem auto;box-shadow:var(--shadow)}
+.auth-card input{width:100%;padding:0.8rem;border:2px solid rgba(0,0,0,0.08);border-radius:12px;margin-bottom:0.8rem;font-family:'Plus Jakarta Sans',sans-serif}
+.admin-container{max-width:800px;margin:2rem auto;padding:2rem;background:var(--glass);backdrop-filter:blur(20px);border-radius:var(--radius);box-shadow:var(--shadow)}
+.admin-container input,.admin-container textarea,.admin-container select{width:100%;padding:0.7rem;border:2px solid rgba(0,0,0,0.08);border-radius:12px;margin-bottom:0.8rem;font-family:'Plus Jakarta Sans',sans-serif}
+footer{text-align:center;padding:1.5rem;color:var(--text-secondary);font-size:0.85rem}
+@media(max-width:768px){.hero h1{font-size:2.5rem}.nav-links{gap:1rem}}

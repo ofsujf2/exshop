@@ -1,108 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Payment — <%= product.name %></title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        .crypto-page { max-width: 600px; margin: 2rem auto; text-align: center; padding: 2rem; }
-        .timer-box { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 2rem; border-radius: 24px; margin-bottom: 2rem; }
-        .timer { font-size: 3rem; font-weight: 900; font-family: monospace; }
-        .timer-label { font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem; }
-        .crypto-amount { font-size: 1.5rem; font-weight: 800; margin: 1rem 0; }
-        .qr-code { width: 200px; height: 200px; border-radius: 16px; margin: 1rem auto; display: block; background: white; padding: 10px; }
-        .wallet-address { background: #f5f5f5; padding: 1rem; border-radius: 12px; word-break: break-all; font-family: monospace; font-size: 0.85rem; margin: 1rem 0; }
-        .copy-btn { background: #e91e63; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; margin: 0.5rem; }
-        .expired { color: #c62828; font-weight: 700; font-size: 1.2rem; }
-        .crypto-selector { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .crypto-tab { padding: 0.7rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; border: 2px solid rgba(0,0,0,0.1); background: white; transition: all 0.3s; }
-        .crypto-tab.active { background: #1a1a2e; color: #f0b90b; border-color: #f0b90b; }
-        .crypto-tab img { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
-    </style>
-</head>
-<body>
-    <%- include('partials/navbar') %>
-    <div class="crypto-page">
-        <h1>Crypto Payment</h1>
-        <p style="color:#999;margin-bottom:2rem;">Send the exact amount to the wallet below</p>
-
-        <div class="crypto-selector" id="crypto-selector">
-            <button class="crypto-tab active" data-currency="bitcoin"><img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/btc.svg">BTC</button>
-            <button class="crypto-tab" data-currency="ethereum"><img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/eth.svg">ETH</button>
-            <button class="crypto-tab" data-currency="solana"><img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/sol.svg">SOL</button>
-            <button class="crypto-tab" data-currency="litecoin"><img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/ltc.svg">LTC</button>
-        </div>
-
-        <div class="timer-box">
-            <div class="timer" id="timer">25:00</div>
-            <div class="timer-label">Time remaining to complete payment</div>
-        </div>
-
-        <div id="expired-msg" class="expired" style="display:none;">⚠️ Time expired. Please restart checkout.</div>
-
-        <div class="crypto-amount" id="crypto-amount">Loading...</div>
-        <img class="qr-code" id="qr-code" src="" alt="QR Code">
-        <div class="wallet-address" id="wallet-address">Loading...</div>
-        <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-        <p style="color:#999;font-size:0.8rem;margin-top:1rem;">After payment, your order will be confirmed automatically.</p>
-    </div>
-    <%- include('partials/footer') %>
-
-    <script>
-        const WALLETS = {
-            bitcoin: "bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka",
-            ethereum: "0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628",
-            solana: "2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE",
-            litecoin: "LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX"
-        };
-        const SYMBOLS = { bitcoin: 'BTC', ethereum: 'ETH', solana: 'SOL', litecoin: 'LTC' };
-        const PRICE_EUR = <%= product.price %>;
-        let currentCurrency = 'bitcoin';
-        let timerInterval;
-        let timeLeft = 25 * 60; // 25 minutes in seconds
-
-        // Timer
-        function updateTimer() {
-            const min = Math.floor(timeLeft / 60);
-            const sec = timeLeft % 60;
-            document.getElementById('timer').textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('expired-msg').style.display = 'block';
-                document.querySelector('.timer-box').style.opacity = '0.5';
-            }
-            timeLeft--;
-        }
-        timerInterval = setInterval(updateTimer, 1000);
-
-        // Currency selector
-        document.querySelectorAll('.crypto-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.crypto-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                currentCurrency = this.dataset.currency;
-                updateCryptoInfo();
-            });
-        });
-
-        function updateCryptoInfo() {
-            const address = WALLETS[currentCurrency];
-            const symbol = SYMBOLS[currentCurrency];
-            document.getElementById('wallet-address').textContent = address;
-            document.getElementById('crypto-amount').textContent = '€' + PRICE_EUR.toFixed(2) + ' → ' + symbol;
-            
-            const uri = currentCurrency + ':' + address;
-            document.getElementById('qr-code').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(uri);
-        }
-
-        function copyAddress() {
-            navigator.clipboard.writeText(WALLETS[currentCurrency]);
-            alert('Address copied!');
-        }
-
-        updateCryptoInfo();
-    </script>
-</body>
-</html>
+<!DOCTYPE html><html><head><title>Crypto Payment</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div style="max-width:500px;margin:2rem auto;background:var(--glass);padding:2rem;border-radius:24px;text-align:center;">
+<h2>Crypto Payment</h2><p>Send exactly <strong>&euro;<%= product.price.toFixed(2) %></strong> to:</p>
+<div style="background:#f5f5f5;padding:1rem;border-radius:12px;margin:1rem 0;">
+<p><strong>BTC:</strong> bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</p>
+<p><strong>ETH:</strong> 0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</p>
+<p><strong>SOL:</strong> 2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</p>
+<p><strong>LTC:</strong> LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</p>
+</div>
+<p>After payment, your order will be processed.</p>
+</div>
+<%- include('partials/footer') %></body></html>
