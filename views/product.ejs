@@ -5,7 +5,7 @@
     <span class="badge badge-blue">Premium</span>
     <h1 style="margin:1rem 0;"><%= product.name %></h1>
     <p class="text-dim"><%= product.description %></p>
-    <div class="price" style="font-size:2rem;margin:1.5rem 0;">€<%= product.price.toFixed(2) %></div>
+    <div class="price" style="font-size:2rem;margin:1.5rem 0;">&euro;<%= product.price.toFixed(2) %></div>
     <% if (product.gallery) { try { const g = JSON.parse(product.gallery); if(g.length){ %><div class="flex gap-1" style="margin:1rem 0"><% g.forEach(img => { %><img src="<%= img %>" style="width:70px;height:70px;object-fit:cover;border-radius:10px;"><% }) %></div><% }} catch(e) {} } %>
     <a href="/checkout/<%= product.id %>" class="btn btn-primary btn-block">Buy Now</a>
   </div>
