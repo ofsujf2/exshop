@@ -59,8 +59,8 @@
             PayPal API Keys
         </div>
         <div class="api-keys-form">
-            <input type="text" id="paypal_client_id" placeholder="PayPal Client ID" value="<%= config ? config.paypal_client_id || '' : '' %>">
-            <input type="password" id="paypal_secret" placeholder="PayPal Secret" value="<%= config ? config.paypal_secret || '' : '' %>">
+            <input type="text" id="paypal_client_id" placeholder="PayPal Client ID" value="">
+            <input type="password" id="paypal_secret" placeholder="PayPal Secret" value="">
             <button onclick="saveKeys()" class="btn-submit">Save Keys</button>
             <span id="api-status" style="margin-left:1rem;font-weight:600;"></span>
         </div>
