@@ -14,10 +14,11 @@
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .input-group { margin-bottom: 1rem; }
         .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
-        .input-group input { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
-        .input-group input:focus { border-color: #e91e63; }
-        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 1rem; }
-        .btn-crypto { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; text-decoration: none; }
+        .input-group input, .input-group select { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
+        .input-group input:focus, .input-group select:focus { border-color: #e91e63; }
+        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 0.8rem; }
+        .btn-card { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #2d2d44); color: white; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); margin-bottom: 0.8rem; }
+        .btn-crypto { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; text-decoration: none; display: flex; }
         .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 20px; padding: 1.5rem; }
         .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
         .summary-product { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
@@ -37,8 +38,8 @@
     <div class="checkout-page">
         <div class="checkout-grid">
             <div class="checkout-form-wrapper">
-                <h3>Shipping Details</h3>
-                <form id="paypal-form" method="GET" action="/paypal-checkout/<%= product.id %>">
+                <form method="GET" action="/card-checkout/<%= product.id %>" id="card-form">
+                    <h3>Shipping Details</h3>
                     <div class="form-row">
                         <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
                         <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
@@ -48,22 +49,40 @@
                         <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
                         <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
                     </div>
-                    <button type="submit" class="btn-paypal">
-                        <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal"> Pay with PayPal
-                    </button>
-                </form>
 
-                <form method="GET" action="/crypto-checkout/<%= product.id %>">
-                    <input type="hidden" name="name" id="crypto-name">
-                    <input type="hidden" name="email" id="crypto-email">
-                    <input type="hidden" name="address" id="crypto-address">
-                    <input type="hidden" name="city" id="crypto-city">
-                    <input type="hidden" name="zip_code" id="crypto-zip">
-                    <button type="submit" class="btn-crypto" onclick="copyShippingToCrypto()">
+                    <h3>Payment Method</h3>
+                    
+                    <!-- PayPal -->
+                    <form method="GET" action="/paypal-checkout/<%= product.id %>">
+                        <input type="hidden" name="name" id="pp-name">
+                        <input type="hidden" name="email" id="pp-email">
+                        <input type="hidden" name="address" id="pp-address">
+                        <input type="hidden" name="city" id="pp-city">
+                        <input type="hidden" name="zip_code" id="pp-zip">
+                        <button type="submit" class="btn-paypal" onclick="copyToPayPal()">
+                            <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal"> Pay with PayPal
+                        </button>
+                    </form>
+
+                    <!-- Credit Card -->
+                    <form method="GET" action="/card-checkout/<%= product.id %>">
+                        <input type="hidden" name="name" id="card-name">
+                        <input type="hidden" name="email" id="card-email">
+                        <input type="hidden" name="address" id="card-address">
+                        <input type="hidden" name="city" id="card-city">
+                        <input type="hidden" name="zip_code" id="card-zip">
+                        <button type="submit" class="btn-card" onclick="copyToCard()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Pay with Credit Card
+                        </button>
+                    </form>
+
+                    <!-- Crypto -->
+                    <a href="/crypto-checkout/<%= product.id %>" class="btn-crypto" style="text-decoration:none;">
                         <span style="font-size:1.4rem;">₿</span> Pay with Crypto
-                    </button>
+                    </a>
                 </form>
             </div>
+
             <div class="checkout-summary-wrapper">
                 <div class="summary-card">
                     <h3>Order Summary</h3>
@@ -82,12 +101,19 @@
     </div>
     <%- include('partials/footer') %>
     <script>
-    function copyShippingToCrypto() {
-        document.getElementById('crypto-name').value = document.querySelector('#paypal-form input[name="name"]').value;
-        document.getElementById('crypto-email').value = document.querySelector('#paypal-form input[name="email"]').value;
-        document.getElementById('crypto-address').value = document.querySelector('#paypal-form input[name="address"]').value;
-        document.getElementById('crypto-city').value = document.querySelector('#paypal-form input[name="city"]').value;
-        document.getElementById('crypto-zip').value = document.querySelector('#paypal-form input[name="zip_code"]').value;
+    function copyToPayPal() {
+        document.getElementById('pp-name').value = document.querySelector('#card-form input[name="name"]').value;
+        document.getElementById('pp-email').value = document.querySelector('#card-form input[name="email"]').value;
+        document.getElementById('pp-address').value = document.querySelector('#card-form input[name="address"]').value;
+        document.getElementById('pp-city').value = document.querySelector('#card-form input[name="city"]').value;
+        document.getElementById('pp-zip').value = document.querySelector('#card-form input[name="zip_code"]').value;
+    }
+    function copyToCard() {
+        document.getElementById('card-name').value = document.querySelector('#card-form input[name="name"]').value;
+        document.getElementById('card-email').value = document.querySelector('#card-form input[name="email"]').value;
+        document.getElementById('card-address').value = document.querySelector('#card-form input[name="address"]').value;
+        document.getElementById('card-city').value = document.querySelector('#card-form input[name="city"]').value;
+        document.getElementById('card-zip').value = document.querySelector('#card-form input[name="zip_code"]').value;
     }
     </script>
 </body>
