@@ -136,9 +136,8 @@ app.post('/admin/login', (req, res) => {
     });
 });
 app.get('/admin', requireAdmin, (req, res) => {
-    db.all("SELECT * FROM orders ORDER BY created_at DESC LIMIT 50", (err, orders) => {
     db.all("SELECT * FROM products", (err, products) => {
-        res.render('admin', { products: products || [], orders: orders || [], categories: ['All','Electronics','Gaming','Clothes','Accessories','Home','Garden','Adapters','Robux'] });
+        res.render('admin', { products: products || [], categories: ['All','Electronics','Gaming','Clothes','Accessories','Home','Garden','Adapters','Robux'] });
     });
 });
 app.post('/admin/add', requireAdmin, upload.single('image'), (req, res) => {
