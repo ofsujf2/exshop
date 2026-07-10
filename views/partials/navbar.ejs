@@ -12,4 +12,12 @@
         <a href="/login" class="login-link">Login</a>
         <% } %>
     </div>
+
+    <form class="search-bar" action="/search" method="GET" style="display:flex;align-items:center;gap:0;background:white;border-radius:50px;padding:0.3rem;border:2px solid rgba(0,0,0,0.06);">
+        <input type="text" name="q" placeholder="Search products..." style="border:none;outline:none;padding:0.5rem 1rem;font-family:'Plus Jakarta Sans',sans-serif;width:200px;background:transparent;">
+        <button type="submit" style="background:#e91e63;color:white;border:none;border-radius:50px;padding:0.5rem 1.2rem;cursor:pointer;font-weight:600;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+    </form>
+
 </nav>

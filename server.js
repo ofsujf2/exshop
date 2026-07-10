@@ -119,4 +119,12 @@ app.get('/admin/delete/:id', requireAdmin, (req, res) => {
     res.redirect('/admin');
 });
 
+
+app.get('/search', (req, res) => {
+    const query = req.query.q || '';
+    db.all("SELECT * FROM products WHERE name LIKE ? OR description LIKE ?", ['%' + query + '%', '%' + query + '%'], (err, products) => {
+        res.render('home', { products: products || [], top_products: [], current_category: 'All', user: req.session.userId, searchQuery: query });
+    });
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));
