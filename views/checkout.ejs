@@ -13,19 +13,13 @@
       <div class="glass checkout-panel">
         <h3>Payment method</h3>
         <div class="pay-methods">
-          <div class="pay-method selected" onclick="selectPay('revolut')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Revolut</span><small>Instant</small>
-          </div>
-          <div class="pay-method" onclick="selectPay('crypto')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8">₿</text></svg><span>Crypto</span><small>BTC,ETH,SOL,LTC</small>
-          </div>
+          <div class="pay-method selected" onclick="selectPay('revolut')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Revolut</span><small>Instant</small></div>
+          <div class="pay-method" onclick="selectPay('crypto')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8">₿</text></svg><span>Crypto</span><small>BTC,ETH,SOL,LTC</small></div>
         </div>
         <div id="pay-revolut" class="pay-detail">
-          <p>Click the button below to pay with <strong>Revolut</strong>. You'll be redirected to complete the payment.</p>
-          <button type="button" class="btn btn-primary btn-block mt-2" onclick="payWithRevolut()">Pay with Revolut</button>
+          <button type="button" class="btn btn-primary btn-block mt-2" onclick="payRevolut()">Pay with Revolut</button>
         </div>
         <div id="pay-crypto" class="pay-detail hidden">
-          <p>You will be redirected to a secure payment page with QR code and wallet addresses.</p>
           <a href="/crypto-checkout/<%= product.id %>" class="btn btn-primary btn-block mt-2">Pay with Crypto</a>
         </div>
       </div>
@@ -39,27 +33,17 @@
   </div>
 </div>
 <script>
-  let currentPay = 'revolut';
   function selectPay(method) {
     document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
-    currentPay = method;
     document.getElementById('pay-revolut').classList.toggle('hidden', method !== 'revolut');
     document.getElementById('pay-crypto').classList.toggle('hidden', method !== 'crypto');
   }
-  async function payWithRevolut() {
+  function payRevolut() {
     const form = document.getElementById('checkout-form');
-    const formData = new FormData(form);
-    try {
-      const response = await fetch(form.action, { method: 'POST', body: formData });
-      if (response.ok) {
-        window.open('https://revolut.me/exshop', '_blank');
-      } else {
-        alert('Error creating order. Please try again.');
-      }
-    } catch (e) {
-      alert('Network error.');
-    }
+    fetch(form.action, { method: 'POST', body: new FormData(form) })
+      .then(r => { window.open('https://revolut.me/exshop', '_blank'); })
+      .catch(e => alert('Error'));
   }
 </script>
 <%- include('partials/footer') %>

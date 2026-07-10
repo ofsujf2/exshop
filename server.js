@@ -31,7 +31,6 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT, full_name TEXT, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, amount REAL, customer_name TEXT, customer_email TEXT, created_at TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS payment_config (id INTEGER PRIMARY KEY AUTOINCREMENT, paypal_client_id TEXT, paypal_secret TEXT, paypal_verified INTEGER DEFAULT 0)");
     db.run("ALTER TABLE products ADD COLUMN gallery TEXT DEFAULT '[]'", (err) => {});
     db.run("INSERT OR IGNORE INTO admin (id, username, password) VALUES (1, 'admin', ?)", [bcrypt.hashSync('executive2026', 10)]);
 });
@@ -124,7 +123,7 @@ app.post('/login', (req, res) => {
 });
 app.get('/logout', (req, res) => { req.session.destroy(); res.redirect('/'); });
 
-// ADMIN
+// ADMIN (STABILE, senza orders)
 app.get('/admin/login', (req, res) => res.render('admin-login'));
 app.post('/admin/login', (req, res) => {
     db.get("SELECT * FROM admin WHERE username = ?", [req.body.username], (err, admin) => {
