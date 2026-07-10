@@ -6,37 +6,38 @@
     <title>Executive Shop — Premium Products</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(180deg, #fff0f5 0%, #fff 50%, #fce4ec 100%); }
+        .hero { text-align: center; padding: 6rem 2rem 3rem; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(233,30,99,0.06); color: #e91e63; padding: 0.5rem 1.6rem; border-radius: 50px; font-size: 0.82rem; font-weight: 700; margin-bottom: 2rem; border: 1px solid rgba(233,30,99,0.15); }
+        .hero h1 { font-size: 5rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1; }
+        .hero h1 .accent { background: linear-gradient(135deg, #e91e63, #c2185b, #f48fb1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: shimmer 4s ease-in-out infinite; }
+        @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .hero p { color: #888; max-width: 500px; margin: 1rem auto 2rem; font-size: 1.05rem; }
+        .hero-stats { display: flex; justify-content: center; gap: 4rem; margin-top: 3rem; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg,#e91e63,#c2185b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #999; font-weight: 700; }
+        .product-card { transition: all 0.4s cubic-bezier(0.25,0.8,0.25,1.2); }
+        .product-card:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 24px 48px rgba(194,24,91,0.12); }
+    </style>
 </head>
 <body>
-<div class="stars-container">
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-    </div>
-    <div class="petals-container">
-        <% for (let i = 0; i < 12; i++) { %><div class="petal"></div><% } %>
-    </div>
     <%- include('partials/navbar') %>
     <%- include('partials/categories') %>
-
+    
     <section class="hero">
         <div class="hero-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Trusted by 10,000+ customers worldwide
         </div>
-        <h1>Premium<br><span class="accent">Products</span> Delivered</h1>
-        <p class="subtitle">Discover our curated collection of high-end products. Quality guaranteed.</p>
-        <div class="hero-cta">
-            <a href="#products" class="btn-primary btn-lg">Shop Now →</a>
-            <span class="hero-note">✓ Free worldwide shipping</span>
-        </div>
+        <h1>Premium<br><span class="accent">Products</span></h1>
+        <p>Discover our curated collection of high-end products. Quality guaranteed.</p>
+        <a href="/products" class="btn-primary btn-lg" style="display:inline-flex;width:auto;">Explore Collection →</a>
         <div class="hero-stats">
-            <div class="stat-item"><span class="stat-number">10K+</span><span class="stat-label">Customers</span></div>
-            <div class="stat-item"><span class="stat-number">4.9</span><span class="stat-label">★ Rating</span></div>
+            <div class="stat-item"><span class="stat-number">10K+</span><span class="stat-label">Happy Customers</span></div>
+            <div class="stat-item"><span class="stat-number">4.9</span><span class="stat-label">Average Rating</span></div>
             <div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">Countries</span></div>
-            <div class="stat-item"><span class="stat-number">24/7</span><span class="stat-label">Support</span></div>
         </div>
     </section>
 
@@ -44,28 +45,22 @@
     <section class="featured-section">
         <div class="section-header"><h2>Best <span class="accent">Sellers</span></h2></div>
         <div class="featured-grid">
-            <% top_products.forEach((p, i) => { %>
+            <% top_products.forEach((p,i) => { %>
             <div class="featured-card">
                 <span class="featured-rank">#<%= i+1 %></span>
-                <div class="featured-image">
-                    <% if (p.image) { %><img src="/uploads/<%= p.image %>" alt="<%= p.name %>"><% } %>
-                </div>
-                <div class="featured-info">
-                    <h4><%= p.name.substring(0,25) %></h4>
-                    <div class="featured-price">€<%= p.price.toFixed(2) %></div>
-                    <div class="featured-sold"><%= p.sales_count %>+ sold</div>
-                    <a href="/product/<%= p.id %>" class="btn-primary btn-sm">View</a>
-                </div>
+                <div class="featured-image"><% if (p.image) { %><img src="/uploads/<%= p.image %>" alt="<%= p.name %>"><% } %></div>
+                <h4><%= p.name.substring(0,25) %></h4>
+                <div class="featured-price">&euro;<%= p.price.toFixed(2) %></div>
+                <a href="/product/<%= p.id %>" class="btn-primary btn-sm">View</a>
             </div>
-            <% }); %>
+            <% }) %>
         </div>
     </section>
     <% } %>
 
-    <section id="products" class="products-section">
+    <section class="products-section">
         <div class="section-header"><h2>Our <span class="accent">Collection</span></h2></div>
         <div class="products-grid">
-            <% if (products && products.length > 0) { %>
             <% products.forEach(p => { %>
             <div class="product-card">
                 <div class="image-wrapper">
@@ -76,37 +71,14 @@
                     <h3><%= p.name %></h3>
                     <p class="desc"><%= p.description.substring(0,100) %>...</p>
                     <div class="card-footer">
-                        <div class="price">€<%= p.price.toFixed(2) %></div>
-                        <div class="mini-rating">★★★★★ <span>4.9</span></div>
+                        <div class="price">&euro;<%= p.price.toFixed(2) %></div>
                     </div>
-                    <div class="sold-count"><%= p.sales_count %>+ sold</div>
                     <a href="/product/<%= p.id %>" class="btn-primary">View Details →</a>
                 </div>
             </div>
-            <% }); %>
-            <% } else { %>
-            <div class="empty-state"><h3>Coming Soon</h3><p>No products in this category yet.</p></div>
-            <% } %>
+            <% }) %>
         </div>
     </section>
-
-    <section class="reviews-section">
-        <div class="section-header"><h2>What Our <span class="accent">Customers</span> Say</h2></div>
-        <div class="reviews-grid">
-            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">S</div><div><div class="reviewer-name">Sarah Mitchell</div><div class="reviewer-email">sarah.m@icloud.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"Ordered the vacuum cleaner and it arrived in 3 days! Best purchase I've made all year!"</p><div class="review-date">2 days ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
-            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">J</div><div><div class="reviewer-name">James Cooper</div><div class="reviewer-email">j.cooper@outlook.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"Premium quality towels! Super soft, wash perfectly. Shipping was fast to the UK!"</p><div class="review-date">5 days ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
-            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">E</div><div><div class="reviewer-name">Emily Rodriguez</div><div class="reviewer-email">emily.r@gmail.com</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">"The adapter works perfectly! Charges super fast. Way better than the original!"</p><div class="review-date">1 week ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
-            <div class="review-card"><div class="review-header"><div class="reviewer-avatar">M</div><div><div class="reviewer-name">Michael Chen</div><div class="reviewer-email">m.chen@proton.me</div></div><div class="review-stars">★★★★☆</div></div><p class="review-text">"Great gaming accessories! RGB mouse is smooth. Amazing deal!"</p><div class="review-date">2 weeks ago</div><div class="verified-badge">✓ Verified Purchase</div></div>
-        </div>
-    </section>
-
-    <section class="trust-bar">
-    <div class="trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Secure Payments</div>
-    <div class="trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Fast Shipping</div>
-    <div class="trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><polyline points="9 12 11 14 15 10"/></svg>30-Day Returns</div>
-    <div class="trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>24/7 Support</div>
-    <div class="trust-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>Quality Guarantee</div>
-</section>
 
     <%- include('partials/footer') %>
 </body>

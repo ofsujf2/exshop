@@ -7,113 +7,123 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        .checkout-page { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; }
-        .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        .checkout-form-wrapper { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 24px; padding: 2.5rem; }
-        .checkout-form-wrapper h3 { font-size: 1.3rem; font-weight: 700; margin: 1.5rem 0 1rem; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .input-group { margin-bottom: 1rem; }
-        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
-        .input-group input, .input-group select { width: 100%; padding: 1rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
-        .input-group input:focus, .input-group select:focus { border-color: #e91e63; }
-        .btn-paypal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #FFC439, #FFB347); color: #003087; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(255,196,57,0.3); margin-bottom: 0.8rem; }
-        .btn-card { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #2d2d44); color: white; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); margin-bottom: 0.8rem; }
-        .btn-crypto { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #f0b90b; padding: 1.1rem; border-radius: 50px; font-weight: 700; font-size: 1rem; border: 1px solid rgba(240,185,11,0.3); cursor: pointer; text-decoration: none; display: flex; }
-        .summary-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(25px); border-radius: 20px; padding: 1.5rem; }
-        .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
-        .summary-product { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
-        .summary-img { width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(155deg, #fce4ec, #f8bbd0); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .summary-img img { width: 70%; height: 70%; object-fit: contain; }
-        .summary-details strong { font-size: 0.85rem; }
-        .summary-details p { font-size: 0.72rem; color: #999; }
-        .summary-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 0.8rem 0; }
-        .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #666; padding: 0.3rem 0; }
-        .summary-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; padding-top: 0.5rem; }
-        .free { color: #2e7d32; font-weight: 700; }
-        @media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+        .checkout-page { max-width: 900px; margin: 3rem auto; padding: 0 2rem; }
+        .checkout-hero { text-align: center; margin-bottom: 3rem; }
+        .checkout-hero h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.03em; }
+        .checkout-hero .price-badge { display: inline-block; background: linear-gradient(135deg,#e91e63,#c2185b); color: white; padding: 0.5rem 2rem; border-radius: 50px; font-size: 1.5rem; font-weight: 800; margin-top: 1rem; }
+        .checkout-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(30px); border-radius: 28px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.6); }
+        .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+        .payment-card { background: white; border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+        .payment-card:hover { border-color: #e91e63; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(233,30,99,0.12); }
+        .payment-card.selected { border-color: #e91e63; background: rgba(233,30,99,0.03); }
+        .payment-card .icon { width: 60px; height: 60px; margin: 0 auto 1rem; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .payment-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .payment-card p { font-size: 0.8rem; color: #999; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
+        .form-group input { width: 100%; padding: 0.9rem 1.2rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 0.95rem; font-family: 'Plus Jakarta Sans',sans-serif; outline: none; transition: all 0.3s; }
+        .form-group input:focus { border-color: #e91e63; box-shadow: 0 0 0 4px rgba(233,30,99,0.06); }
+        .btn-pay { width: 100%; padding: 1.2rem; border-radius: 60px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; margin-top: 1.5rem; transition: all 0.3s; letter-spacing: 0.02em; }
+        .btn-revolut { background: linear-gradient(135deg,#1a1a2e,#2d2d44); color: white; }
+        .btn-revolut:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26,26,46,0.3); }
+        .btn-crypto { background: linear-gradient(135deg,#f7931a,#f0b90b); color: #1a1a2e; }
+        .btn-crypto:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(247,147,26,0.3); }
+        .crypto-address { display: none; margin-top: 1rem; padding: 1rem; background: #f9f9fb; border-radius: 14px; text-align: left; }
+        .crypto-address.show { display: block; }
+        .crypto-address .addr { font-family: monospace; font-size: 0.8rem; word-break: break-all; background: white; padding: 0.8rem; border-radius: 10px; margin: 0.3rem 0; }
+        @media (max-width: 768px) { .payment-options { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
+    
     <div class="checkout-page">
-        <div class="checkout-grid">
-            <div class="checkout-form-wrapper">
-                <form method="GET" action="/card-checkout/<%= product.id %>" id="card-form">
-                    <h3>Shipping Details</h3>
-                    <div class="form-row">
-                        <div class="input-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
-                        <div class="input-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
+        <div class="checkout-hero">
+            <h1>Complete Your Order</h1>
+            <div class="price-badge">&euro;<%= product.price.toFixed(2) %></div>
+        </div>
+        
+        <div class="checkout-card">
+            <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;">Shipping Details</h3>
+            <form id="checkout-form">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="form-group"><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="john@email.com" required></div>
+                </div>
+                <div class="form-group"><label>Address</label><input type="text" name="address" placeholder="123 Main Street" required></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="form-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
+                    <div class="form-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
+                </div>
+            </form>
+
+            <h3 style="font-size:1.1rem;font-weight:700;margin:2rem 0 1rem;">Select Payment Method</h3>
+            <div class="payment-options">
+                <div class="payment-card selected" onclick="selectPayment('revolut')">
+                    <div class="icon" style="background:linear-gradient(135deg,#1a1a2e,#2d2d44);">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="900">R</text></svg>
                     </div>
-                    <div class="input-group"><label>Address</label><input type="text" name="address" placeholder="123 Main Street" required></div>
-                    <div class="form-row">
-                        <div class="input-group"><label>City</label><input type="text" name="city" placeholder="Milan" required></div>
-                        <div class="input-group"><label>ZIP Code</label><input type="text" name="zip_code" placeholder="20100" required></div>
+                    <h3>Revolut</h3>
+                    <p>Instant bank transfer</p>
+                </div>
+                <div class="payment-card" onclick="selectPayment('crypto')">
+                    <div class="icon" style="background:linear-gradient(135deg,#f7931a,#f0b90b);">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle" fill="#f7931a" font-size="11" font-weight="900">&#x20BF;</text></svg>
                     </div>
-
-                    <h3>Payment Method</h3>
-                    
-                    <!-- PayPal -->
-                    <form method="GET" action="/paypal-checkout/<%= product.id %>">
-                        <input type="hidden" name="name" id="pp-name">
-                        <input type="hidden" name="email" id="pp-email">
-                        <input type="hidden" name="address" id="pp-address">
-                        <input type="hidden" name="city" id="pp-city">
-                        <input type="hidden" name="zip_code" id="pp-zip">
-                        <button type="submit" class="btn-paypal" onclick="copyToPayPal()">
-                            <img src="https://img.icons8.com/color/48/paypal.png" height="24" alt="PayPal"> Pay with PayPal
-                        </button>
-                    </form>
-
-                    <!-- Credit Card -->
-                    <form method="GET" action="/card-checkout/<%= product.id %>">
-                        <input type="hidden" name="name" id="card-name">
-                        <input type="hidden" name="email" id="card-email">
-                        <input type="hidden" name="address" id="card-address">
-                        <input type="hidden" name="city" id="card-city">
-                        <input type="hidden" name="zip_code" id="card-zip">
-                        <button type="submit" class="btn-card" onclick="copyToCard()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Pay with Credit Card
-                        </button>
-                    </form>
-
-                    <!-- Crypto -->
-                    <a href="/crypto-checkout/<%= product.id %>" class="btn-crypto" style="text-decoration:none;">
-                        <span style="font-size:1.4rem;">₿</span> Pay with Crypto
-                    </a>
-                </form>
-            </div>
-
-            <div class="checkout-summary-wrapper">
-                <div class="summary-card">
-                    <h3>Order Summary</h3>
-                    <div class="summary-product">
-                        <div class="summary-img"><% if (product.image) { %><img src="/uploads/<%= product.image %>" alt=""><% } %></div>
-                        <div class="summary-details"><strong><%= product.name %></strong><p><%= product.description.substring(0,60) %>...</p></div>
-                    </div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-row"><span>Subtotal</span><span>€<%= product.price.toFixed(2) %></span></div>
-                    <div class="summary-row"><span>Shipping</span><span class="free">FREE</span></div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-total"><span>Total</span><span>€<%= product.price.toFixed(2) %></span></div>
+                    <h3>Crypto</h3>
+                    <p>BTC, ETH, SOL, LTC</p>
                 </div>
             </div>
+
+            <div id="crypto-addresses" class="crypto-address">
+                <p style="font-weight:700;margin-bottom:0.8rem;">Send to one of these wallets:</p>
+                <div class="addr"><strong>BTC:</strong> bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</div>
+                <div class="addr"><strong>ETH:</strong> 0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</div>
+                <div class="addr"><strong>SOL:</strong> 2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</div>
+                <div class="addr"><strong>LTC:</strong> LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</div>
+            </div>
+
+            <button class="btn-pay btn-revolut" id="pay-btn" onclick="pay()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="#1a1a2e" font-size="10" font-weight="900">R</text></svg>
+                Pay with Revolut
+            </button>
         </div>
     </div>
+    
     <%- include('partials/footer') %>
+    
     <script>
-    function copyToPayPal() {
-        document.getElementById('pp-name').value = document.querySelector('#card-form input[name="name"]').value;
-        document.getElementById('pp-email').value = document.querySelector('#card-form input[name="email"]').value;
-        document.getElementById('pp-address').value = document.querySelector('#card-form input[name="address"]').value;
-        document.getElementById('pp-city').value = document.querySelector('#card-form input[name="city"]').value;
-        document.getElementById('pp-zip').value = document.querySelector('#card-form input[name="zip_code"]').value;
+    let paymentMethod = 'revolut';
+    function selectPayment(method) {
+        paymentMethod = method;
+        document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        
+        const btn = document.getElementById('pay-btn');
+        const addresses = document.getElementById('crypto-addresses');
+        
+        if (method === 'revolut') {
+            btn.className = 'btn-pay btn-revolut';
+            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="#1a1a2e" font-size="10" font-weight="900">R</text></svg> Pay with Revolut';
+            addresses.classList.remove('show');
+        } else {
+            btn.className = 'btn-pay btn-crypto';
+            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#1a1a2e"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="#f7931a" font-size="10" font-weight="900">&#x20BF;</text></svg> Pay with Crypto';
+            addresses.classList.add('show');
+        }
     }
-    function copyToCard() {
-        document.getElementById('card-name').value = document.querySelector('#card-form input[name="name"]').value;
-        document.getElementById('card-email').value = document.querySelector('#card-form input[name="email"]').value;
-        document.getElementById('card-address').value = document.querySelector('#card-form input[name="address"]').value;
-        document.getElementById('card-city').value = document.querySelector('#card-form input[name="city"]').value;
-        document.getElementById('card-zip').value = document.querySelector('#card-form input[name="zip_code"]').value;
+    
+    function pay() {
+        const name = document.querySelector('[name="name"]').value;
+        const email = document.querySelector('[name="email"]').value;
+        if (!name || !email) { alert('Please fill in shipping details.'); return; }
+        
+        if (paymentMethod === 'revolut') {
+            window.open('https://revolut.me/yagw', '_blank');
+            alert('Complete the payment on Revolut. Your order will be confirmed!');
+        } else {
+            alert('Send the exact amount to one of the wallets shown. Your order will be confirmed after payment!');
+        }
     }
     </script>
 </body>
