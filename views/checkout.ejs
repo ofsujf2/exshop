@@ -1,1 +1,16 @@
-<!DOCTYPE html><html><head><title>Checkout</title><link rel="stylesheet" href="/css/style.css"></head><body><%- include("partials/navbar") %><div class="container" style="padding-top:6rem;max-width:500px;"><div class="glass" style="padding:2rem;"><h2>Checkout</h2><p>€<%= product.price.toFixed(2) %></p><form method="POST"><input name="name" placeholder="Name" required><input name="email" placeholder="Email" required><button type="submit" class="btn btn-primary">Pay with Revolut</button></form><a href="/crypto-checkout/<%= product.id %>" class="btn btn-ghost">Pay with Crypto</a></div></div><%- include("partials/footer") %></body></html>
+<!DOCTYPE html><html><head><title>Checkout</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div class="container" style="padding-top:6rem;max-width:500px;">
+  <div class="glass" style="padding:2rem;">
+    <h2>Checkout</h2>
+    <p class="price">€<%= product.price.toFixed(2) %></p>
+    <form method="POST" action="/checkout/<%= product.id %>">
+      <div class="field"><input name="name" placeholder="Full Name" required></div>
+      <div class="field"><input name="email" placeholder="Email" required></div>
+      <button type="submit" class="btn btn-primary btn-block">Pay with Revolut</button>
+    </form>
+    <a href="/crypto-checkout/<%= product.id %>" class="btn btn-ghost btn-block mt-2">Pay with Crypto</a>
+  </div>
+</div>
+<%- include('partials/footer') %>
+</body></html>

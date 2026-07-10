@@ -1,1 +1,21 @@
-<!DOCTYPE html><html><head><title>Shop</title><link rel="stylesheet" href="/css/style.css"></head><body><%- include("partials/navbar") %><section class="hero"><h1>Premium<br><span class="grad">Products</span></h1><a href="/products" class="btn btn-primary">Shop Now</a></section><div class="container"><div class="grid grid-3"><% products.forEach(p => { %><div class="product-card glass"><div class="product-thumb"><% if(p.image){ %><img src="<%= p.image.startsWith("http") ? p.image : "/uploads/" + p.image %>"><% } %></div><div class="product-info"><h4><%= p.name %></h4><p class="text-muted"><%= p.description.substring(0,60) %>...</p><div class="price">€<%= p.price.toFixed(2) %></div><a href="/product/<%= p.id %>" class="btn btn-sm btn-outline">View</a></div></div><% }) %></div></div><%- include("partials/footer") %></body></html>
+<!DOCTYPE html><html><head><title>Executive Shop</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<section class="hero"><div class="container hero-grid"><div>
+  <h1>Premium<br><span class="grad">Products</span></h1>
+  <p class="lead">Discover our curated collection.</p>
+  <a href="/products" class="btn btn-primary">Browse Collection</a>
+</div></div></section>
+<section class="section"><div class="container">
+  <h2>Featured</h2>
+  <div class="grid grid-3">
+    <% products.forEach(p => { %>
+      <div class="product-card glass">
+        <div class="product-thumb"><% if(p.image){ %><img src="<%= p.image.startsWith('http') ? p.image : '/uploads/' + p.image %>"><% } %></div>
+        <div class="product-info"><h4><%= p.name %></h4><div class="price">€<%= p.price.toFixed(2) %></div></div>
+        <a href="/product/<%= p.id %>" class="btn btn-sm btn-outline">View</a>
+      </div>
+    <% }) %>
+  </div>
+</div></section>
+<%- include('partials/footer') %>
+</body></html>

@@ -1,1 +1,12 @@
-<!DOCTYPE html><html><head><title><%= product.name %></title><link rel="stylesheet" href="/css/style.css"></head><body><%- include("partials/navbar") %><div class="container" style="padding-top:6rem;"><div class="glass" style="padding:2rem;"><h1><%= product.name %></h1><p><%= product.description %></p><div class="price">€<%= product.price.toFixed(2) %></div><a href="/checkout/<%= product.id %>" class="btn btn-primary">Buy Now</a></div></div><%- include("partials/footer") %></body></html>
+<!DOCTYPE html><html><head><title><%= product.name %></title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div class="container" style="padding-top:6rem;">
+  <div class="glass" style="padding:2rem;">
+    <h1><%= product.name %></h1>
+    <p class="lead"><%= product.description %></p>
+    <div class="price" style="font-size:2rem;">€<%= product.price.toFixed(2) %></div>
+    <a href="/checkout/<%= product.id %>" class="btn btn-primary">Buy Now</a>
+  </div>
+</div>
+<%- include('partials/footer') %>
+</body></html>

@@ -1,1 +1,13 @@
-<!DOCTYPE html><html><head><title>Admin</title><link rel="stylesheet" href="/css/style.css"></head><body><%- include("partials/navbar") %><div class="container" style="padding-top:6rem;"><div class="glass" style="padding:2rem;"><h1>Admin</h1><form method="POST" action="/admin/add" enctype="multipart/form-data"><input name="name" placeholder="Name"><input name="price" placeholder="Price"><input name="description" placeholder="Description"><input type="file" name="image"><button class="btn btn-primary">Add</button></form><hr><% products.forEach(p => { %><div><%= p.name %> - €<%= p.price %> <a href="/admin/delete/<%= p.id %>">Delete</a></div><% }) %></div></div></body></html>
+<!DOCTYPE html><html><head><title>Admin</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div class="container" style="padding-top:6rem;">
+  <div class="glass" style="padding:2rem;">
+    <h1>Admin</h1>
+    <form method="POST" action="/admin/add" enctype="multipart/form-data">
+      <input name="name" placeholder="Name"><input name="price" placeholder="Price"><input name="description" placeholder="Description"><input type="file" name="image"><button class="btn btn-primary">Add</button>
+    </form>
+    <hr>
+    <% products.forEach(p => { %><div><%= p.name %> - €<%= p.price %> <a href="/admin/delete/<%= p.id %>">Delete</a></div><% }) %>
+  </div>
+</div>
+</body></html>

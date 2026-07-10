@@ -1,1 +1,12 @@
-<!DOCTYPE html><html><head><title>Crypto</title><link rel="stylesheet" href="/css/style.css"></head><body><%- include("partials/navbar") %><div class="container" style="padding-top:6rem;max-width:500px;"><div class="glass" style="padding:2rem;"><h2>Crypto Payment</h2><p>Send €<%= product.price.toFixed(2) %></p><p>BTC: bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</p><a href="/checkout/<%= product.id %>" class="btn btn-ghost">Back</a></div></div><%- include("partials/footer") %></body></html>
+<!DOCTYPE html><html><head><title>Crypto</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<%- include('partials/navbar') %>
+<div class="container" style="padding-top:6rem;max-width:500px;">
+  <div class="glass" style="padding:2rem;">
+    <h2>Crypto Payment</h2>
+    <p>Send €<%= product.price.toFixed(2) %></p>
+    <p>BTC: bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</p>
+    <a href="/checkout/<%= product.id %>" class="btn btn-ghost">Back</a>
+  </div>
+</div>
+<%- include('partials/footer') %>
+</body></html>

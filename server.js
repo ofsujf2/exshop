@@ -17,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({ secret: 'shop', resave: false, saveUninitialized: false }));
 
-const storage = multer.diskStorage({ destination: 'public/uploads/', filename: (req, f, cb) => cb(null, Date.now() + path.extname(f.originalname)) });
+const storage = multer.diskStorage({
+    destination: 'public/uploads/',
+    filename: (req, f, cb) => cb(null, Date.now() + path.extname(f.originalname))
+});
 const upload = multer({ storage });
 
 ['public/uploads','public/css'].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
@@ -25,13 +28,14 @@ const upload = multer({ storage });
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, amount REAL, customer_name TEXT, customer_email TEXT, created_at TEXT)");
     db.run("INSERT OR IGNORE INTO admin (id, username, password) VALUES (1, 'admin', ?)", [bcrypt.hashSync('executive2026', 10)]);
 });
 
 const requireAdmin = (req, res, next) => req.session.admin ? next() : res.redirect('/admin/login');
 
 app.get('/', (req, res) => {
-    db.all("SELECT * FROM products ORDER BY created_at DESC", (err, products) => {
+    db.all("SELECT * FROM products ORDER BY created_at DESC LIMIT 20", (err, products) => {
         res.render('home', { products: products || [], user: req.session.userId });
     });
 });
