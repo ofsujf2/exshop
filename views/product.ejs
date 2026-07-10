@@ -13,7 +13,7 @@
 
     <div class="product-detail">
         <div class="image-wrapper">
-            <% if (product.image) { %><img src="/uploads/<%= product.image %>" alt="<%= product.name %>"><% } %>
+            <% if (product.image) { %><img class="main-image" src="/uploads/<%= product.image %>" alt="<%= product.name %>"><% } %>
         </div>
         <div class="product-info">
             <span class="category">Premium Product</span>
@@ -28,7 +28,19 @@
                 <div class="feature">✓ Secure Payment</div>
             </div>
             <a href="/checkout/<%= product.id %>" class="btn-checkout-main">Proceed to Checkout →</a>
-        </div>
+        
+<% if (product.gallery) { 
+    const images = JSON.parse(product.gallery);
+    if (images.length > 0) { %>
+    <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+        <% images.forEach(img => { %>
+        <img src="<%= img %>" style="width:80px;height:80px;object-fit:cover;border-radius:12px;cursor:pointer;" onclick="document.querySelector('.main-image').src='<%= img %>'">
+        <% }) %>
+    </div>
+    <% }
+} %>
+
+    </div>
     </div>
     <%- include('partials/footer') %>
 </body>

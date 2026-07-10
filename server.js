@@ -28,6 +28,9 @@ const upload = multer({ storage });
 });
 
 db.serialize(() => {
+
+db.run("ALTER TABLE products ADD COLUMN gallery TEXT DEFAULT '[]'");
+
     db.run("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, amount REAL, customer_name TEXT, customer_email TEXT, created_at TEXT)");
@@ -110,8 +113,8 @@ app.get('/admin', requireAdmin, (req, res) => {
 app.post('/admin/add', requireAdmin, upload.single('image'), (req, res) => {
     const { name, description, price, category, stock } = req.body;
     const img = req.file ? req.file.filename : null;
-    db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, created_at) VALUES (?,?,?,?,?,?,?,datetime('now'))",
-        [name, description, parseFloat(price)||0, img, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100]);
+    db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, gallery, created_at) VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
+        [name, description, parseFloat(price)||0, img, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, gallery]);
     res.redirect('/admin');
 });
 app.get('/admin/delete/:id', requireAdmin, (req, res) => {
