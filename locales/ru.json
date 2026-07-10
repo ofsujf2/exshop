@@ -1,0 +1,23 @@
+{
+  "home": "Главная",
+  "products": "Товары",
+  "login": "Войти",
+  "register": "Регистрация",
+  "logout": "Выйти",
+  "search": "Поиск товаров...",
+  "cart": "Корзина",
+  "profile": "Профиль",
+  "admin": "Админ",
+  "shop_now": "Купить сейчас",
+  "best_sellers": "Хиты продаж",
+  "our_collection": "Наша коллекция",
+  "view_details": "Подробнее",
+  "checkout": "Оформление",
+  "complete_order": "Завершить заказ",
+  "pay_revolut": "Оплатить Revolut",
+  "pay_crypto": "Оплатить Крипто",
+  "secure_payments": "Безопасные платежи",
+  "fast_shipping": "Быстрая доставка",
+  "returns": "Возврат 30 дней",
+  "footer_text": "© 2026 Executive Shop. Все права защищены."
+}

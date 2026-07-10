@@ -1,0 +1,23 @@
+{
+  "home": "Home",
+  "products": "Products",
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "search": "Search products...",
+  "cart": "Cart",
+  "profile": "Profile",
+  "admin": "Admin",
+  "shop_now": "Shop Now",
+  "best_sellers": "Best Sellers",
+  "our_collection": "Our Collection",
+  "view_details": "View Details",
+  "checkout": "Checkout",
+  "complete_order": "Complete Order",
+  "pay_revolut": "Pay with Revolut",
+  "pay_crypto": "Pay with Crypto",
+  "secure_payments": "Secure Payments",
+  "fast_shipping": "Fast Shipping",
+  "returns": "30-Day Returns",
+  "footer_text": "© 2026 Executive Shop. All rights reserved."
+}

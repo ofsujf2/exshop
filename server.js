@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
+const uploadMulti = multer({ storage }).array('images', 10);
 
 ['public/uploads', 'public/css'].forEach(d => {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -137,6 +138,23 @@ app.get('/search', (req, res) => {
                 user: req.session.userId 
             });
         });
+});
+
+
+app.post('/admin/add-multi', requireAdmin, (req, res) => {
+    uploadMulti(req, res, (err) => {
+        if (err) return res.send('Error uploading files');
+        const { name, description, price, category, stock } = req.body;
+        const mainImg = req.files && req.files.length > 0 ? req.files[0].filename : null;
+        const gallery = req.files ? req.files.slice(1).map(f => '/uploads/' + f.filename) : [];
+        
+        db.run("INSERT INTO products (name, description, price, image, category, sales_count, stock, gallery, created_at) VALUES (?,?,?,?,?,?,?,?,datetime('now'))",
+            [name, description, parseFloat(price)||0, mainImg, category||'All', Math.floor(Math.random()*450)+50, parseInt(stock)||100, JSON.stringify(gallery)],
+            (err) => {
+                if (err) return res.send('Error saving product');
+                res.redirect('/admin');
+            });
+    });
 });
 
 app.listen(PORT, '0.0.0.0', () => console.log('Executive Shop ready'));

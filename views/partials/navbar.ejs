@@ -25,4 +25,41 @@
 
     
 
+
+    <div class="lang-selector">
+        <select onchange="changeLanguage(this.value)" style="padding:0.4rem 0.8rem;border-radius:50px;border:1px solid rgba(0,0,0,0.1);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.8rem;cursor:pointer;background:white;">
+            <option value="en">🇬🇧 EN</option>
+            <option value="it">🇮🇹 IT</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="fr">🇫🇷 FR</option>
+            <option value="de">🇩🇪 DE</option>
+            <option value="ru">🇷🇺 RU</option>
+        </select>
+    </div>
+    <script>
+    let currentLang = localStorage.getItem('lang') || 'en';
+    document.querySelector('.lang-selector select').value = currentLang;
+    function changeLanguage(lang) {
+        localStorage.setItem('lang', lang);
+        location.reload();
+    }
+    async function translatePage() {
+        const lang = localStorage.getItem('lang') || 'en';
+        if (lang === 'en') return;
+        try {
+            const res = await fetch('/locales/' + lang + '.json');
+            const dict = await res.json();
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (dict[key]) el.textContent = dict[key];
+            });
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-t-placeholder');
+                if (dict[key]) el.placeholder = dict[key];
+            });
+        } catch(e) {}
+    }
+    translatePage();
+    </script>
+
 </nav>
