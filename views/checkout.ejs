@@ -12,18 +12,18 @@
         .checkout-hero h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.03em; }
         .checkout-hero .price-badge { display: inline-block; background: linear-gradient(135deg,#e91e63,#c2185b); color: white; padding: 0.5rem 2rem; border-radius: 50px; font-size: 1.5rem; font-weight: 800; margin-top: 1rem; }
         .checkout-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(30px); border-radius: 28px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.6); }
-        .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
-        .payment-card { background: white; border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
-        .payment-card:hover { border-color: #e91e63; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(233,30,99,0.12); }
-        .payment-card.selected { border-color: #e91e63; background: rgba(233,30,99,0.03); }
-        .payment-card .icon { width: 60px; height: 60px; margin: 0 auto 1rem; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        .payment-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .payment-card p { font-size: 0.8rem; color: #999; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 0.3rem; }
         .form-group input { width: 100%; padding: 0.9rem 1.2rem; border: 2px solid rgba(0,0,0,0.06); border-radius: 14px; font-size: 0.95rem; font-family: 'Plus Jakarta Sans',sans-serif; outline: none; transition: all 0.3s; }
         .form-group input:focus { border-color: #e91e63; box-shadow: 0 0 0 4px rgba(233,30,99,0.06); }
-        .btn-pay { width: 100%; padding: 1.2rem; border-radius: 60px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; margin-top: 1.5rem; transition: all 0.3s; letter-spacing: 0.02em; }
+        .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .payment-card { background: white; border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+        .payment-card:hover { border-color: #e91e63; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(233,30,99,0.12); }
+        .payment-card.selected { border-color: #e91e63; background: rgba(233,30,99,0.03); }
+        .payment-card .icon { width: 60px; height: 60px; margin: 0 auto 1rem; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+        .payment-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .payment-card p { font-size: 0.8rem; color: #999; }
+        .btn-pay { width: 100%; padding: 1.2rem; border-radius: 60px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.3s; letter-spacing: 0.02em; }
         .btn-revolut { background: linear-gradient(135deg,#1a1a2e,#2d2d44); color: white; }
         .btn-revolut:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26,26,46,0.3); }
         .btn-crypto { background: linear-gradient(135deg,#f7931a,#f0b90b); color: #1a1a2e; }
@@ -59,14 +59,14 @@
 
             <h3 style="font-size:1.1rem;font-weight:700;margin:2rem 0 1rem;">Select Payment Method</h3>
             <div class="payment-options">
-                <div class="payment-card selected" onclick="selectPayment('revolut')">
+                <div class="payment-card selected" onclick="selectPayment('revolut')" id="card-revolut">
                     <div class="icon" style="background:linear-gradient(135deg,#1a1a2e,#2d2d44);">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="900">R</text></svg>
                     </div>
                     <h3>Revolut</h3>
                     <p>Instant bank transfer</p>
                 </div>
-                <div class="payment-card" onclick="selectPayment('crypto')">
+                <div class="payment-card" onclick="selectPayment('crypto')" id="card-crypto">
                     <div class="icon" style="background:linear-gradient(135deg,#f7931a,#f0b90b);">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle" fill="#f7931a" font-size="11" font-weight="900">&#x20BF;</text></svg>
                     </div>
@@ -97,7 +97,7 @@
     function selectPayment(method) {
         paymentMethod = method;
         document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
+        document.getElementById('card-' + method).classList.add('selected');
         
         const btn = document.getElementById('pay-btn');
         const addresses = document.getElementById('crypto-addresses');
@@ -119,10 +119,9 @@
         if (!name || !email) { alert('Please fill in shipping details.'); return; }
         
         if (paymentMethod === 'revolut') {
-            window.open('https://revolut.me/yagw', '_blank');
-            alert('Complete the payment on Revolut. Your order will be confirmed!');
+            window.open('https://revolut.me/exshop', '_blank');
         } else {
-            alert('Send the exact amount to one of the wallets shown. Your order will be confirmed after payment!');
+            alert('Send the exact amount to one of the crypto wallets shown above.');
         }
     }
     </script>
