@@ -123,7 +123,6 @@ app.post('/login', (req, res) => {
 });
 app.get('/logout', (req, res) => { req.session.destroy(); res.redirect('/'); });
 
-// ADMIN (STABILE, senza orders)
 app.get('/admin/login', (req, res) => res.render('admin-login'));
 app.post('/admin/login', (req, res) => {
     db.get("SELECT * FROM admin WHERE username = ?", [req.body.username], (err, admin) => {
