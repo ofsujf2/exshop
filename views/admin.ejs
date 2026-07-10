@@ -3,22 +3,52 @@
 <div class="container" style="padding-top:6rem;">
   <div class="glass" style="padding:2rem;">
     <h1>Dashboard</h1>
+    <div class="grid grid-3 mb-3">
+      <div class="glass" style="padding:1.5rem; text-align:center;">
+        <div style="font-size:2rem; font-weight:800;"><%= products.length %></div>
+        <div class="text-muted">Products</div>
+      </div>
+      <div class="glass" style="padding:1.5rem; text-align:center;">
+        <div style="font-size:2rem; font-weight:800;"><%= orders ? orders.length : 0 %></div>
+        <div class="text-muted">Orders</div>
+      </div>
+      <div class="glass" style="padding:1.5rem; text-align:center;">
+        <div style="font-size:2rem; font-weight:800;">€<%= orders ? orders.reduce((s,o)=>s+o.amount,0).toFixed(2) : '0.00' %></div>
+        <div class="text-muted">Revenue</div>
+      </div>
+    </div>
+
     <div class="divider"></div>
     <h3>Add Product (Multi-Image)</h3>
     <form method="POST" action="/admin/add-multi" enctype="multipart/form-data">
-      <div class="field"><input name="name" placeholder="Product Name" required></div>
+      <div class="form-row">
+        <div class="field"><input name="name" placeholder="Product Name" required></div>
+        <div class="field"><input name="price" type="number" step="0.01" placeholder="Price" required></div>
+      </div>
       <div class="field"><textarea name="description" placeholder="Description"></textarea></div>
       <div class="form-row">
-        <div class="field"><input name="price" type="number" step="0.01" placeholder="Price" required></div>
-        <div class="field"><input name="stock" type="number" value="100"></div>
+        <div class="field"><input name="stock" type="number" value="100" placeholder="Stock"></div>
+        <div class="field"><select name="category"><option>Electronics</option><option>Gaming</option><option>Clothes</option><option>Accessories</option><option>Home</option><option>Garden</option><option>Adapters</option><option>Robux</option></select></div>
       </div>
-      <div class="field"><select name="category"><option>Electronics</option><option>Gaming</option><option>Clothes</option><option>Accessories</option><option>Home</option><option>Garden</option><option>Adapters</option><option>Robux</option></select></div>
       <div class="field"><label>Images (max 10)</label><input type="file" name="images" multiple></div>
       <button class="btn btn-primary">Upload Product</button>
     </form>
+
     <div class="divider"></div>
     <h3>Products (<%= products.length %>)</h3>
-    <table><thead><tr><th>Name</th><th>Price</th><th>Action</th></tr></thead><tbody><% products.forEach(p => { %><tr><td><%= p.name %></td><td>€<%= p.price %></td><td><a href="/admin/delete/<%= p.id %>" class="btn btn-sm btn-danger">Delete</a></td></tr><% }) %></tbody></table>
+    <table>
+      <thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>
+      <tbody>
+        <% products.forEach(p => { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td>€<%= p.price %></td>
+          <td><%= p.stock || 'N/A' %></td>
+          <td><a href="/admin/delete/<%= p.id %>" class="btn btn-sm btn-danger">Delete</a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
     <a href="/logout" class="btn btn-ghost mt-2">Logout</a>
   </div>
 </div>

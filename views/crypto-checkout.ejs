@@ -1,14 +1,43 @@
 <!DOCTYPE html><html><head><title>Crypto Payment</title><link rel="stylesheet" href="/css/style.css"></head><body>
 <%- include('partials/navbar') %>
-<div style="max-width:500px;margin:2rem auto;background:var(--glass);padding:2rem;border-radius:24px;text-align:center;">
-<h2>Crypto Payment</h2><p>Send exactly <strong>&euro;<%= product.price.toFixed(2) %></strong> to one of these wallets:</p>
-<div style="background:#f5f5f5;padding:1rem;border-radius:12px;margin:1rem 0;text-align:left;">
-<p><strong>BTC:</strong> bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</p>
-<p><strong>ETH:</strong> 0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</p>
-<p><strong>SOL:</strong> 2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</p>
-<p><strong>LTC:</strong> LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</p>
+<div class="container" style="padding-top:6rem; max-width:600px; margin:0 auto;">
+  <div class="glass" style="padding:2rem; text-align:center;">
+    <h2>Crypto Payment</h2>
+    <p class="lead">Send exactly <strong>€<%= product.price.toFixed(2) %></strong> to one of these wallets</p>
+    <div class="timer-box" style="background:linear-gradient(135deg, #1a1a2e, #16213e); color:#f0b90b; padding:1.2rem; border-radius:16px; margin:1.5rem 0;">
+      <div style="font-size:2.5rem; font-weight:900; font-family:monospace;" id="timer">25:00</div>
+      <small style="opacity:0.8;">Time remaining</small>
+    </div>
+    <div class="wallet-options" style="text-align:left;">
+      <div class="wallet-option selected"><span>BTC</span><code>bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</code></div>
+      <div class="wallet-option"><span>ETH</span><code>0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</code></div>
+      <div class="wallet-option"><span>SOL</span><code>2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</code></div>
+      <div class="wallet-option"><span>LTC</span><code>LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</code></div>
+    </div>
+    <div class="qr-box"><img id="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka" alt="QR"></div>
+    <a href="/" class="btn btn-ghost mt-2">Back to Shop</a>
+  </div>
 </div>
-<p>After payment, your order will be confirmed.</p>
-<a href="/product/<%= product.id %>" class="btn" style="background:#333;">Back</a>
-</div>
-<%- include('partials/footer') %></body></html>
+<script>
+  // Timer 25 minuti
+  let timeLeft = 25 * 60;
+  setInterval(() => {
+    const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+    const s = (timeLeft%60).toString().padStart(2,'0');
+    document.getElementById('timer').textContent = m+':'+s;
+    if (timeLeft <= 0) clearInterval();
+    timeLeft--;
+  }, 1000);
+
+  // Aggiorna QR al click su wallet
+  document.querySelectorAll('.wallet-option').forEach(el => {
+    el.addEventListener('click', function() {
+      document.querySelectorAll('.wallet-option').forEach(e => e.classList.remove('selected'));
+      this.classList.add('selected');
+      const code = this.querySelector('code').textContent;
+      document.getElementById('qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(code);
+    });
+  });
+</script>
+<%- include('partials/footer') %>
+</body></html>

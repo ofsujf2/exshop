@@ -3,7 +3,7 @@
 <div class="container checkout-shell">
   <div>
     <div class="checkout-steps"><div class="checkout-step done"><span class="num">✓</span>Shipping</div><div class="checkout-step active"><span class="num">2</span>Payment</div><div class="checkout-step"><span class="num">3</span>Confirmation</div></div>
-    <form method="POST" action="/checkout/<%= product.id %>">
+    <form id="checkout-form" method="POST" action="/checkout/<%= product.id %>">
       <div class="glass checkout-panel">
         <h3>Shipping Details</h3>
         <div class="form-row"><div class="field"><label>Full Name</label><input name="name" required></div><div class="field"><label>Email</label><input name="email" type="email" required></div></div>
@@ -13,22 +13,20 @@
       <div class="glass checkout-panel">
         <h3>Payment method</h3>
         <div class="pay-methods">
-          <div class="pay-method selected" onclick="selectPay('revolut')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Revolut</span><small>Instant</small></div>
-          <div class="pay-method" onclick="selectPay('crypto')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8">₿</text></svg><span>Crypto</span><small>BTC,ETH,SOL,LTC</small></div>
+          <div class="pay-method selected" onclick="selectPay('revolut')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Revolut</span><small>Instant</small>
+          </div>
+          <div class="pay-method" onclick="selectPay('crypto')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8">₿</text></svg><span>Crypto</span><small>BTC,ETH,SOL,LTC</small>
+          </div>
         </div>
         <div id="pay-revolut" class="pay-detail">
           <p>Click the button below to pay with <strong>Revolut</strong>. You'll be redirected to complete the payment.</p>
-          <button type="submit" class="btn btn-primary btn-block mt-2">Pay with Revolut</button>
+          <button type="button" class="btn btn-primary btn-block mt-2" onclick="payWithRevolut()">Pay with Revolut</button>
         </div>
         <div id="pay-crypto" class="pay-detail hidden">
-          <p>Send exactly <strong>€<%= product.price.toFixed(2) %></strong> to one of these wallets:</p>
-          <div class="wallet-options">
-            <div class="wallet-option selected"><span>BTC</span><code>bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</code></div>
-            <div class="wallet-option"><span>ETH</span><code>0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</code></div>
-            <div class="wallet-option"><span>SOL</span><code>2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</code></div>
-            <div class="wallet-option"><span>LTC</span><code>LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</code></div>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block mt-2">Complete Order</button>
+          <p>You will be redirected to a secure payment page with QR code and wallet addresses.</p>
+          <a href="/crypto-checkout/<%= product.id %>" class="btn btn-primary btn-block mt-2">Pay with Crypto</a>
         </div>
       </div>
     </form>
@@ -48,6 +46,20 @@
     currentPay = method;
     document.getElementById('pay-revolut').classList.toggle('hidden', method !== 'revolut');
     document.getElementById('pay-crypto').classList.toggle('hidden', method !== 'crypto');
+  }
+  async function payWithRevolut() {
+    const form = document.getElementById('checkout-form');
+    const formData = new FormData(form);
+    try {
+      const response = await fetch(form.action, { method: 'POST', body: formData });
+      if (response.ok) {
+        window.open('https://revolut.me/exshop', '_blank');
+      } else {
+        alert('Error creating order. Please try again.');
+      }
+    } catch (e) {
+      alert('Network error.');
+    }
   }
 </script>
 <%- include('partials/footer') %>
