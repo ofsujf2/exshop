@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
-:root{--pink:#e91e63;--pink-dark:#c2185b;--pink-light:#fce4ec;--bg:#fdf2f5;--glass:rgba(255,255,255,0.7);--glass-border:rgba(255,255,255,0.5);--text:#1a1a1a;--text-secondary:#666;--radius:24px;--shadow:0 8px 32px rgba(194,24,91,0.08)}
+:root{--pink:#e91e63;--pink-dark:#c2185b;--pink-light:#fce4ec;--bg:#fdf2f5;--glass:rgba(255,255,255,0.75);--glass-border:rgba(255,255,255,0.55);--text:#1a1a1a;--text-secondary:#666;--radius:24px;--shadow:0 8px 32px rgba(194,24,91,0.08)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#fce4ec 0%,#fff 50%,#f8bbd0 100%);min-height:100vh;color:var(--text)}
 .navbar{background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -23,6 +23,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135de
 .product-card .price{font-size:1.3rem;font-weight:800;color:var(--pink)}
 .btn{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--pink-dark));color:white;padding:0.6rem 1.5rem;border-radius:50px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(233,30,99,0.2)}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(233,30,99,0.3)}
+.btn-revolut{background:linear-gradient(135deg,#1a1a2e,#2d2d44);color:white}
+.btn-crypto{background:linear-gradient(135deg,#f7931a,#f0b90b);color:#1a1a2e}
 .auth-card{background:var(--glass);backdrop-filter:blur(20px);padding:2rem;border-radius:var(--radius);max-width:400px;margin:3rem auto;box-shadow:var(--shadow)}
 .auth-card input{width:100%;padding:0.8rem;border:2px solid rgba(0,0,0,0.08);border-radius:12px;margin-bottom:0.8rem;font-family:'Plus Jakarta Sans',sans-serif}
 .admin-container{max-width:800px;margin:2rem auto;padding:2rem;background:var(--glass);backdrop-filter:blur(20px);border-radius:var(--radius);box-shadow:var(--shadow)}

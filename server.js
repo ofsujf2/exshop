@@ -32,20 +32,16 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, amount REAL, customer_name TEXT, customer_email TEXT, created_at TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS payment_config (id INTEGER PRIMARY KEY AUTOINCREMENT, paypal_client_id TEXT, paypal_secret TEXT, paypal_verified INTEGER DEFAULT 0)");
-    // Aggiungi colonna gallery in modo sicuro
     db.run("ALTER TABLE products ADD COLUMN gallery TEXT DEFAULT '[]'", (err) => {});
     db.run("INSERT OR IGNORE INTO admin (id, username, password) VALUES (1, 'admin', ?)", [bcrypt.hashSync('executive2026', 10)]);
 });
 
 const requireAdmin = (req, res, next) => req.session.admin ? next() : res.redirect('/admin/login');
 
-// ROTTE PUBBLICHE
 app.get('/', (req, res) => {
-    const cat = req.query.category || 'All';
-    const query = cat === 'All' ? "SELECT * FROM products" : "SELECT * FROM products WHERE category = ?";
-    db.all(query, cat === 'All' ? [] : [cat], (err, products) => {
+    db.all("SELECT * FROM products ORDER BY sales_count DESC LIMIT 20", (err, products) => {
         db.all("SELECT * FROM products ORDER BY sales_count DESC LIMIT 10", (err, top) => {
-            res.render('home', { products: products || [], top_products: top || [], current_category: cat, user: req.session.userId });
+            res.render('home', { products: products || [], top_products: top || [], user: req.session.userId });
         });
     });
 });

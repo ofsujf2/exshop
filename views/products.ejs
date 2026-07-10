@@ -1,64 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Products — Executive Shop</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    .products-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-    .sidebar-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(15px); border-radius: 20px; padding: 1.5rem; }
-    .sidebar-card h3 { font-size: 0.85rem; text-transform: uppercase; color: #e91e63; margin-bottom: 1rem; }
-    .filter-group { margin-bottom: 1rem; }
-    .filter-group a { display: block; padding: 0.3rem 0; color: #555; text-decoration: none; font-size: 0.85rem; }
-    .filter-group a:hover { color: #e91e63; }
-    .sort-select { width: 100%; padding: 0.5rem; border-radius: 10px; border: 1px solid #ddd; font-family: 'Plus Jakarta Sans'; }
-    .products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
-    @media (max-width: 768px) { .products-layout { grid-template-columns: 1fr; } }
-  </style>
-</head>
-<body>
-  <%- include('partials/navbar') %>
-  <div class="products-layout">
-    <aside class="sidebar">
-      <div class="sidebar-card">
-        <h3>Categories</h3>
-        <div class="filter-group">
-          <a href="/products">All</a>
-          <% ['Electronics','Gaming','Clothes','Accessories','Home','Garden','Adapters','Robux'].forEach(cat => { %>
-            <a href="/products?category=<%= cat %>"><%= cat %></a>
-          <% }) %>
-        </div>
-        <h3>Sort By</h3>
-        <select class="sort-select" onchange="location.href='/products?sort='+this.value">
-          <option value="newest">Newest</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="popular">Popular</option>
-        </select>
-      </div>
-    </aside>
-    <main>
-      <div class="products-header">
-        <h2>Products (<%= products.length %>)</h2>
-      </div>
-      <div class="products-grid">
-        <% products.forEach(p => { %>
-          <div class="product-card">
-            <div class="image-wrapper">
-              <% if (p.image) { %><img src="<%= p.image.startsWith('http') ? p.image : '/uploads/' + p.image %>"><% } %>
-            </div>
-            <div class="card-body">
-              <h3><%= p.name %></h3>
-              <p class="desc"><%= p.description.substring(0,80) %>...</p>
-              <div class="price">&euro;<%= p.price.toFixed(2) %></div>
-              <a href="/product/<%= p.id %>" class="btn" style="display:block;text-align:center;margin-top:0.5rem;">View Details</a>
-            </div>
-          </div>
-        <% }) %>
-      </div>
-    </main>
-  </div>
-  <%- include('partials/footer') %>
-</body>
-</html>
+<!DOCTYPE html><html><head><title>Products</title><link rel="stylesheet" href="/css/style.css"><style>.products-layout{display:grid;grid-template-columns:240px 1fr;gap:2rem;max-width:1200px;margin:2rem auto;padding:0 1rem}.sidebar-card{background:var(--glass);backdrop-filter:blur(15px);border-radius:20px;padding:1.5rem}.sidebar-card h3{font-size:0.85rem;text-transform:uppercase;color:var(--pink);margin-bottom:1rem}.filter-group{margin-bottom:1rem}.filter-group a{display:block;padding:0.3rem 0;color:#555;text-decoration:none;font-size:0.85rem}.filter-group a:hover{color:var(--pink)}.sort-select{width:100%;padding:0.5rem;border-radius:10px;border:1px solid #ddd;font-family:'Plus Jakarta Sans',sans-serif}@media(max-width:768px){.products-layout{grid-template-columns:1fr}}</style></head><body>
+<%- include('partials/navbar') %>
+<div class="products-layout">
+<aside class="sidebar"><div class="sidebar-card"><h3>Categories</h3><div class="filter-group"><a href="/products">All</a><% ['Electronics','Gaming','Clothes','Accessories','Home','Garden','Adapters','Robux'].forEach(cat => { %><a href="/products?category=<%= cat %>"><%= cat %></a><% }) %></div><h3>Sort</h3><select class="sort-select" onchange="location.href='/products?sort='+this.value"><option value="newest">Newest</option><option value="price-asc">Price Low→High</option><option value="price-desc">Price High→Low</option><option value="popular">Popular</option></select></div></aside>
+<main><h2 style="margin-bottom:1rem;">Products (<%= products.length %>)</h2>
+<div class="products-grid"><% products.forEach(p => { %><div class="product-card"><div class="image-wrapper"><% if(p.image){ %><img src="<%= p.image.startsWith('http') ? p.image : '/uploads/' + p.image %>"><% } %></div><div class="card-body"><h3><%= p.name %></h3><p class="desc"><%= p.description.substring(0,80) %>...</p><div class="price">&euro;<%= p.price.toFixed(2) %></div><a href="/product/<%= p.id %>" class="btn" style="display:block;text-align:center;margin-top:0.5rem;">View</a></div></div><% }) %></div></main>
+</div>
+<%- include('partials/footer') %></body></html>
