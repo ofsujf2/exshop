@@ -104,7 +104,7 @@ app.post('/admin/login', (req, res) => {
 });
 app.get('/admin', requireAdmin, (req, res) => {
     db.all("SELECT * FROM products", (err, products) => {
-        res.render('admin', { products: products || [], categories: ['All','Gaming','Electronics','Robux','Clothes','Accessories','Adapters','Home','Garden'] });
+        res.render('admin', { products: products || [], orders: [], categories: ['All','Gaming','Electronics','Robux','Clothes','Accessories','Adapters','Home','Garden'] });
     });
 });
 app.post('/admin/add', requireAdmin, upload.single('image'), (req, res) => {
