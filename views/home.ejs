@@ -1,5 +1,25 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Executive Shop</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<!DOCTYPE html><html><head><title>Executive Shop</title><link rel="stylesheet" href="/css/style.css"></head><body>
 <%- include('partials/navbar') %>
-<section class="hero"><h1>Premium<br><span class="accent">Products</span></h1><p>Discover our curated collection.</p><a href="/products" class="btn">Shop Now</a></section>
-<section class="products-grid"><% products.forEach(p => { %><div class="product-card"><div class="image-wrapper"><% if(p.image){ %><img src="<%= p.image.startsWith('http') ? p.image : '/uploads/' + p.image %>"><% } %></div><div class="card-body"><h3><%= p.name %></h3><p class="desc"><%= p.description.substring(0,80) %>...</p><div class="price">&euro;<%= p.price.toFixed(2) %></div><a href="/product/<%= p.id %>" class="btn">View</a></div></div><% }) %></section>
-<%- include('partials/footer') %></body></html>
+<section class="hero"><div class="container hero-grid"><div>
+  <div class="eyebrow"><span>Premium Marketplace</span></div>
+  <h1>Curated<br><span class="grad">Digital & Physical</span></h1>
+  <p class="lead">Discover high-quality products with instant delivery and secure payments.</p>
+  <div class="hero-cta"><a href="/products" class="btn btn-primary">Browse Collection</a></div>
+  <div class="hero-stats"><div class="stat"><b>10k+</b><span>Customers</span></div><div class="stat"><b>4.9</b><span>Rating</span></div><div class="stat"><b>50+</b><span>Countries</span></div></div>
+</div><div class="hero-visual"><div class="glass hero-card"><div class="row"><span>Trending now</span><span class="badge badge-blue">New</span></div><div class="row">Wireless Earbuds Pro</div><div class="row"><span>€59</span><a href="#" class="btn btn-sm btn-outline">View</a></div></div></div></div></section>
+
+<section class="section"><div class="container">
+  <div class="section-head"><h2>Featured Products</h2><a href="/products" class="btn btn-ghost">View All</a></div>
+  <div class="grid grid-4">
+    <% products.forEach(p => { %>
+      <div class="product-card glass">
+        <div class="product-thumb"><% if(p.image){ %><img src="<%= p.image.startsWith('http') ? p.image : '/uploads/' + p.image %>" style="width:100%;height:100%;object-fit:contain;"><% } %></div>
+        <div class="product-info"><h4><%= p.name %></h4><p class="text-muted" style="font-size:0.8rem;"><%= p.description.substring(0,60) %>...</p></div>
+        <div class="product-meta"><span class="price">€<%= p.price.toFixed(2) %></span><a href="/product/<%= p.id %>" class="btn btn-sm btn-outline">View</a></div>
+      </div>
+    <% }) %>
+  </div>
+</div></section>
+
+<%- include('partials/footer') %>
+</body></html>

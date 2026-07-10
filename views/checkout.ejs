@@ -1,12 +1,54 @@
 <!DOCTYPE html><html><head><title>Checkout</title><link rel="stylesheet" href="/css/style.css"></head><body>
 <%- include('partials/navbar') %>
-<div style="max-width:500px;margin:2rem auto;background:var(--glass);padding:2rem;border-radius:24px;">
-<h2>Complete Order</h2><p style="font-size:1.5rem;font-weight:700;">&euro;<%= product.price.toFixed(2) %></p>
-<form method="POST" action="/checkout/<%= product.id %>">
-<input name="name" placeholder="Full Name" required style="width:100%;padding:0.8rem;margin-bottom:0.8rem;border-radius:12px;border:1px solid #ddd;">
-<input name="email" placeholder="Email" required style="width:100%;padding:0.8rem;margin-bottom:1rem;border-radius:12px;border:1px solid #ddd;">
-<button type="submit" class="btn" style="width:100%;background:linear-gradient(135deg,#1a1a2e,#2d2d44);">Pay with Revolut</button>
-</form>
-<a href="/crypto-checkout/<%= product.id %>" class="btn" style="width:100%;margin-top:0.5rem;background:linear-gradient(135deg,#f7931a,#f0b90b);color:#1a1a2e;text-align:center;display:block;">Pay with Crypto</a>
+<div class="container checkout-shell">
+  <div>
+    <div class="checkout-steps"><div class="checkout-step done"><span class="num">✓</span>Shipping</div><div class="checkout-step active"><span class="num">2</span>Payment</div><div class="checkout-step"><span class="num">3</span>Confirmation</div></div>
+    <form method="POST" action="/checkout/<%= product.id %>">
+      <div class="glass checkout-panel">
+        <h3>Shipping Details</h3>
+        <div class="form-row"><div class="field"><label>Full Name</label><input name="name" required></div><div class="field"><label>Email</label><input name="email" type="email" required></div></div>
+        <div class="field"><label>Address</label><input name="address" required></div>
+        <div class="form-row"><div class="field"><label>City</label><input name="city" required></div><div class="field"><label>ZIP</label><input name="zip_code" required></div></div>
+      </div>
+      <div class="glass checkout-panel">
+        <h3>Payment method</h3>
+        <div class="pay-methods">
+          <div class="pay-method selected" onclick="selectPay('revolut')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Revolut</span><small>Instant</small></div>
+          <div class="pay-method" onclick="selectPay('crypto')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="8">₿</text></svg><span>Crypto</span><small>BTC,ETH,SOL,LTC</small></div>
+        </div>
+        <div id="pay-revolut" class="pay-detail">
+          <p>Click the button below to pay with <strong>Revolut</strong>. You'll be redirected to complete the payment.</p>
+          <button type="submit" class="btn btn-primary btn-block mt-2">Pay with Revolut</button>
+        </div>
+        <div id="pay-crypto" class="pay-detail hidden">
+          <p>Send exactly <strong>€<%= product.price.toFixed(2) %></strong> to one of these wallets:</p>
+          <div class="wallet-options">
+            <div class="wallet-option selected"><span>BTC</span><code>bc1qqkl35zull7py2zt8fvugxh0hs6elarxuzwcmka</code></div>
+            <div class="wallet-option"><span>ETH</span><code>0x0536b4264B1AaA26B5A97c3184692b25Fa7e1628</code></div>
+            <div class="wallet-option"><span>SOL</span><code>2tUKR6CrndRiFR5iaRYhHwgA6uG1dqNbAVFKwwhXpkWE</code></div>
+            <div class="wallet-option"><span>LTC</span><code>LSEjnWc4NTWz9s3Sy7KsNFPk6DakAJAkaX</code></div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block mt-2">Complete Order</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="glass summary-card">
+    <h3>Order Summary</h3>
+    <div class="summary-item"><span><%= product.name %></span><span>€<%= product.price.toFixed(2) %></span></div>
+    <div class="summary-item total"><span>Total</span><span>€<%= product.price.toFixed(2) %></span></div>
+    <div class="trust-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/></svg>Secure encrypted payment</div>
+  </div>
 </div>
-<%- include('partials/footer') %></body></html>
+<script>
+  let currentPay = 'revolut';
+  function selectPay(method) {
+    document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    currentPay = method;
+    document.getElementById('pay-revolut').classList.toggle('hidden', method !== 'revolut');
+    document.getElementById('pay-crypto').classList.toggle('hidden', method !== 'crypto');
+  }
+</script>
+<%- include('partials/footer') %>
+</body></html>
