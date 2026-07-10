@@ -1,12 +1,1 @@
-<nav class="navbar">
-    <a href="/" class="logo">Executive<span>Shop</span></a>
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/products">Products</a>
-        <% if (locals.user) { %>
-        <a href="/logout">Logout</a>
-        <% } else { %>
-        <a href="/login">Login</a>
-        <% } %>
-    </div>
-</nav>
+<nav class="navbar"><a href="/" class="logo">Executive<span class="accent">Shop</span></a><div class="nav-links"><a href="/">Home</a><a href="/products">Products</a><% if (locals.user) { %><a href="/logout">Logout</a><% } else { %><a href="/login">Login</a><% } %></div></nav>
