@@ -30,7 +30,6 @@ const uploadMulti = multer({ storage }).array('images', 10);
 
 db.serialize(() => {
 
-db.run("ALTER TABLE products ADD COLUMN gallery TEXT DEFAULT '[]'");
 
     db.run("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, image TEXT, category TEXT DEFAULT 'All', sales_count INTEGER DEFAULT 0, stock INTEGER DEFAULT 100, created_at TEXT)");
